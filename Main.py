@@ -46,7 +46,16 @@ def clean_and_tag(url):
 
 def trim_tokens(tokens):
     """Removes garbage from beginning and end of tokens"""
-
+    start = 0
+    end = len(tokens)-1
+    for i in range(len(tokens)):
+        if tokens[i] == 'PARTICIPANTS' and tokens[i+1] == ':':
+            start = i
+        elif tokens[i] == 'Citation' and tokens[i+1] == ':':
+            end = i
+            break
+        i += 1
+    return tokens[start:end]
 
 if __name__ == '__main__':
     main()
