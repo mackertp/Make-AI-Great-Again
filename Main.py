@@ -1,8 +1,6 @@
 from __future__ import print_function
 import sys
 import nltk
-import re
-import bs4
 from urllib import urlopen
 from bs4 import BeautifulSoup
 from AnalysisTools import AnalysisTools
@@ -44,19 +42,33 @@ def sub_menu(at):
     user_in = raw_input(">> ")
 
     if user_in == "help":
-        print("commands")
-
-    elif user_in == "return":
-        main_menu()
-
-    elif user_in == "participants":
-        # prints participants in the debate
-        print(at.participants)
+        print("\n1) print participants\n2) print moderators")
         sub_menu(at)
 
-    elif user_in == "moderators":
+    elif user_in == "return":
+        print("\n")
+        main_menu()
+
+    elif user_in == "1":
+        # prints participants in the debate
+        output = ""
+        for name in at.get_participants():
+            if name != at.get_participants()[len(at.get_participants()) - 1]:
+                output += name + ", "
+            else:
+                output += name
+        print("\n" + output + "\n")
+        sub_menu(at)
+
+    elif user_in == "2":
         # prints the moderators
-        print(at.moderators)
+        output = ""
+        for name in at.get_moderators():
+            if name != at.get_moderators()[len(at.get_moderators()) -1]:
+                output += name + ", "
+            else:
+                output += name
+        print("\n" + output + "\n")
         sub_menu(at)
 
     elif user_in == "words":
