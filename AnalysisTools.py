@@ -19,6 +19,9 @@ class AnalysisTools:
         self.speak_dict = dicts[0]
         self.word_dict = dicts[1]
         self.reaction_dict = dicts[2]
+        self.text_dict = {}
+        for part in self.participants:
+            self.text_dict[part] = nltk.Text(self.word_dict[part])
 
     def total_words(self):
         total = 0
@@ -37,6 +40,10 @@ class AnalysisTools:
         for part in self.participants:
             answer += self.words_by_candidate(part) + '\n'
         return answer
+
+    def get_concordance(self, candidate, topic):
+        my_text = self.text_dict[candidate]
+        return my_text.concordance(topic)
 
     def get_participants(self):
         return self.participants
