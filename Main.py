@@ -20,7 +20,7 @@ def main_menu():
 
     while not quit_prog:
         if user_in == "help":
-            print("help -- show options\nselect -- pick a debate to be analyzed\nquit -- quits program")
+            print("\nhelp -- show options\nselect -- pick a debate to be analyzed\nquit -- quits program\n")
             main_menu()
 
         elif user_in == "select":
@@ -34,11 +34,12 @@ def main_menu():
             sys.exit(0)
 
         else:
-            print("lol not done yet")
+            print("Invalid command\n")
+            main_menu()
 
 
 def sub_menu(at):
-    print("\nType a command, help shows all valid commands, return sends back to main menu")
+    print("\nType a command, 'help' shows all valid commands, 'return' sends back to main menu")
     user_in = raw_input(">> ")
 
     if user_in == "help":
@@ -64,7 +65,7 @@ def sub_menu(at):
         # prints the moderators
         output = ""
         for name in at.get_moderators():
-            if name != at.get_moderators()[len(at.get_moderators()) -1]:
+            if name != at.get_moderators()[len(at.get_moderators()) - 1]:
                 output += name + ", "
             else:
                 output += name
@@ -74,14 +75,20 @@ def sub_menu(at):
     elif user_in == "words":
         # choose total words spoken or break down by candidates
         print("")
+        sub_menu(at)
 
     elif user_in == "concordance":
         # select a word and a candidate, gives back concordance
         print("")
+        sub_menu(at)
 
     elif user_in == "quit":
         print("Goodbye!")
         sys.exit(0)
+
+    else:
+        print("Invalid command, type 'help' to see a list of all valid commands\n")
+        sub_menu(at)
 
 
 def select_debate():

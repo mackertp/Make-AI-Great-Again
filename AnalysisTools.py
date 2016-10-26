@@ -16,7 +16,6 @@ class AnalysisTools:
         self.text = text
         self.participants, self.moderators = self.get_people()
 
-
     def get_participants(self):
         return self.participants
 
@@ -35,7 +34,11 @@ class AnalysisTools:
                 if '.' in name:
                     name_pattern = re.compile(r'^.*\.+([A-Z]+)$')  # weird error with tonkenizer, some are "word.TRUMP"
                     name_match = re.search(name_pattern, name)
-                    name = name_match.group(1)  # get only name
+                    try:
+                        name = name_match.group(1)  # get only name
+                    except AttributeError:
+                        i += 1
+                        continue
                 exclude = ['PARTICIPANTS', 'MODERATORS', 'MODERATOR', 'PANELISTS']
                 if name not in people and name not in exclude:
                     people.append(name)
