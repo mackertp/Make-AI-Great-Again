@@ -1,10 +1,11 @@
+from __future__ import print_function
+import sys
+
 """
 Debate analyzer project
 
 Preston Mackert, Dylan Telford, Alexis Grebenok, Jerry Daigler
 """
-from __future__ import print_function
-import sys
 
 
 def main_menu():
@@ -19,8 +20,9 @@ def main_menu():
         else:
             print("lol not done yet")
 
+
 def main():
-    print("Welcome! Are you ready to 'Make AI Great Again?\ntype a command, help will show all commands, quit will"
+    print("Welcome! Are you ready to 'Make AI Great Again'?\ntype a command, help will show all commands, quit will"
           "exit the program")
     main_menu()
 
