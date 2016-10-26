@@ -20,7 +20,7 @@ def main_menu():
             print("lol not done yet")
 
 def main():
-    print("Welcome! Are you ready to 'Make AI Great Again?\ntype a command, help will show all commands, quit will"
+    print("Welcome! Are you ready to 'Make AI Great Again?'\ntype a command, help will show all commands, quit will"
           "exit the program")
     main_menu()
 
