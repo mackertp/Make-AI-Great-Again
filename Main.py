@@ -19,7 +19,11 @@ def main_menu():
     quit_prog = False
     while not quit_prog:
         if user_in == "help":
-            print("list commands")
+            print("select -- pick a debate to be analyzed")
+            main_menu()
+        elif user_in == "select":
+            url = select_debate()
+            print(url)
             main_menu()
         elif user_in == "quit":
             sys.exit(0)
@@ -27,10 +31,97 @@ def main_menu():
             print("lol not done yet")
 
 
-def main():
-    print("Welcome! Are you ready to 'Make AI Great Again?'\ntype a command, help will show all commands, quit will"
-          "exit the program")
-    main_menu()
+def select_debate():
+    print("Select a debate from:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4) General Election\n5) "
+          "add your own!")
+    url = ""
+    user_in = raw_input(">> ")
+    if user_in == "1":
+        # select form democrat debates
+        print("\nSelect one of the debates:\n1) Las Vegas 10-13-15\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
+              "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Miami 3-9-16\n9) "
+              "Brooklyn 4-14-16")
+        select = raw_input(">> ")
+        if select == "1":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
+        elif select == "2":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110910"
+        elif select == "3":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111178"
+        elif select == "4":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111409"
+        elif select == "5":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111471"
+        elif select == "6":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111520"
+        elif select == "7":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112718"
+        elif select == "8":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112719"
+        elif select == "9":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=116995"
+        else:
+            print("Invalid command, no debate selected")
+
+    elif user_in == "2":
+        # select from republican debates
+        print("\nSelect one of the debates:\n1) Cleveland 8-6-15\n2) Simi Valley 9-16-15\n3) Boulder 10-28-15\n4) "
+              "Milwaukee 11-10-15\n5) Las Vegas 12-15-15\n6) North Charleston 1-14-16\n7) Des Moines 1-28-16\n8) "
+              "Manchester 2-6-16\n9) Greenville 2-13-16\n10) Houston 2-25-16\n11) Detroit 3-3-16\n12) Miami 3-10-16")
+        select = raw_input(">> ")
+        if select == "1":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110489"
+        elif select == "2":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110756"
+        elif select == "3":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110906"
+        elif select == "4":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110908"
+        elif select == "5":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111177"
+        elif select == "6":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111395"
+        elif select == "7":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111412"
+        elif select == "8":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111472"
+        elif select == "9":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111500"
+        elif select == "10":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111634"
+        elif select == "11":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111711"
+        elif select == "12":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=115148"
+        else:
+            print("Invalid command, no url selected")
+
+    elif user_in == "3":
+        # the VP debate is selected, only one exists
+        url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119012"
+
+    elif user_in == "4":
+        # debates from the general election will be options
+        print("Select one of the debates:\n1) Hofstra 9-26-16\n2) Washington University 10-9-16\n3) University Nevada"
+              " 10-19-16")
+        select = raw_input(">> ")
+        if select == "1":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=118971"
+        elif select == "2":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119038"
+        elif select == "3":
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119039"
+        else:
+            print("invalid command, no url selected")
+
+    elif user_in == "5":
+        url = raw_input(">> ")
+
+    else:
+        print("Invalid command, type a valid option (1-5)")
+        select_debate()
+
+    return url
 
 
 def clean_and_tag(url):
@@ -56,6 +147,11 @@ def trim_tokens(tokens):
             break
         i += 1
     return tokens[start:end]
+
+def main():
+    print("Welcome! Are you ready to 'Make AI Great Again?'\ntype a command, help will show all commands, quit will"
+          "exit the program")
+    main_menu()
 
 if __name__ == '__main__':
     main()

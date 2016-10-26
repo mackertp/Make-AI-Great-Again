@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import nltk
 """
 AnalysisTools class for Make-AI-Great-Again
 
@@ -6,7 +7,6 @@ methods used to analyze clean debate transcripts
 
 """
 
-import nltk
 
 class AnalysisTools:
     def __init__(self, text):
