@@ -5,7 +5,7 @@ import re
 import bs4
 from urllib import urlopen
 from bs4 import BeautifulSoup
-import AnalysisTools
+from AnalysisTools import AnalysisTools
 
 """
 Debate analyzer project
@@ -40,7 +40,7 @@ def main_menu():
 
 
 def sub_menu(at):
-    print("\nType a command, help shows all valid commands")
+    print("\nType a command, help shows all valid commands, return sends back to main menu")
     user_in = raw_input(">> ")
 
     if user_in == "help":
@@ -51,11 +51,13 @@ def sub_menu(at):
 
     elif user_in == "participants":
         # prints participants in the debate
-        print("")
+        print(at.participants)
+        sub_menu(at)
 
     elif user_in == "moderators":
         # prints the moderators
-        print("")
+        print(at.moderators)
+        sub_menu(at)
 
     elif user_in == "words":
         # choose total words spoken or break down by candidates
