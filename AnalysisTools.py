@@ -38,9 +38,9 @@ class AnalysisTools:
                 while not (speaker_pattern.match(self.text[i][0]) and self.text[i+1][0] == ':'):
                     part_string += self.text[i][0].lower() + ' '
                     i += 1
-            elif self.text[i][0] in ['MODERATOR', 'MODERATORS']:
+            if self.text[i][0] in ['MODERATOR', 'MODERATORS']:
                 i += 2
-                while not (speaker_pattern.match(self.text[i][0]) and self.text[i + 1][0] == ':'):
+                while not (speaker_pattern.match(self.text[i][0]) and self.text[i+1][0] == ':'):
                     mod_string += self.text[i][0].lower() + ' '
                     i += 1
             i += 1
@@ -51,5 +51,5 @@ class AnalysisTools:
             if name in part_string.split():
                 parts.append(name.upper())
             elif name in mod_string.split():
-                mods.append(name.upper)
+                mods.append(name.upper())
         return (parts, mods)
