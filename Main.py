@@ -43,7 +43,9 @@ def sub_menu(at):
     user_in = raw_input(">> ")
 
     if user_in == "help":
-        print("\n1) print participants\n2) print moderators\n3) print all the words spoken by candidates\n4) ")
+        print("\n1) print participants\n2) print moderators\n3) print total number of words by candidates\n4) "
+              "print out number of words for each candidate\n5) print number of words for specific candidate\n6) print"
+              "out concordance for a word and candidate")
         sub_menu(at)
 
     elif user_in == "return":
@@ -72,15 +74,39 @@ def sub_menu(at):
         print("\n" + output + "\n")
         sub_menu(at)
 
-    elif user_in == "words":
+    elif user_in == "3":
         # choose total words spoken or break down by candidates
-        print(at.total_words())
-        print(at.words_by_all_candidates())
+        print("\ntotal words spoken by candidates: " + str(at.total_words()) + "\n")
         sub_menu(at)
 
-    elif user_in == "concordance":
+    elif user_in == "4":
+        print("\n" + at.words_by_all_candidates())
+        sub_menu(at)
+
+    elif user_in == "5":
+        can_num = 1
+        print("\nSelect a candidate:\n")
+        for name in at.get_participants():
+            print("%d) %s" % (can_num, name))
+            can_num += 1
+        print("\n")
+        select = raw_input(">> ")
+        candidate = at.get_participants()[int(select)-1]
+        print("\n" + at.words_by_candidate(candidate) + "\n")
+        sub_menu(at)
+
+    elif user_in == "6":
         # select a word and a candidate, gives back concordance
-        print("")
+        can_num = 1
+        print("\nSelect a candidate:\n")
+        for name in at.get_participants():
+            print("%d) %s" % (can_num, name))
+            can_num += 1
+        select = raw_input(">> ")
+        candidate = at.get_participants()[int(select) - 1]
+        print("\nSelect a word to look for")
+        word = raw_input(">> ")
+        at.get_concordance(candidate, word)
         sub_menu(at)
 
     elif user_in == "quit":
