@@ -74,7 +74,8 @@ def sub_menu(at):
 
     elif user_in == "words":
         # choose total words spoken or break down by candidates
-        print("")
+        print(at.total_words())
+        print(at.words_by_all_candidates())
         sub_menu(at)
 
     elif user_in == "concordance":
