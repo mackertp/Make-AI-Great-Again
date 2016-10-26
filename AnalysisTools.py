@@ -29,7 +29,7 @@ class AnalysisTools:
     def words_by_candidate(self, candidate):
         candidate_total = len(self.word_dict[candidate])
         total = self.total_words()
-        percent = '%.2f%%' % (candidate_total / float(total))
+        percent = '%.2f%%' % ((candidate_total / float(total))*100)
         return '%s spoke %d words (%s of the total words spoken by the candidates)' % (candidate, candidate_total,
                                                                                        percent)
     def words_by_all_candidates(self):
@@ -61,7 +61,7 @@ class AnalysisTools:
                     except AttributeError:
                         i += 1
                         continue
-                exclude = ['PARTICIPANTS', 'MODERATORS', 'MODERATOR', 'PANELISTS']
+                exclude = ['PARTICIPANTS', 'MODERATORS', 'MODERATOR', 'PANELISTS', 'CNN']
                 if name not in people and name not in exclude:
                     people.append(name)
             if self.text[i][0] == 'PARTICIPANTS':
