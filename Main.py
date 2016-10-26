@@ -16,24 +16,58 @@ Preston Mackert, Dylan Telford, Alexis Grebenok, Jerry Daigler
 
 
 def main_menu():
+    print("Type a command, help shows all commands, quit will exit the program\n")
     user_in = raw_input(">> ")
     quit_prog = False
+
     while not quit_prog:
         if user_in == "help":
             print("help -- show options\nselect -- pick a debate to be analyzed\nquit -- quits program")
             main_menu()
+
         elif user_in == "select":
             url = select_debate()
             clean_text = clean_and_tag(url)
             at = AnalysisTools(clean_text)
             sub_menu(at)
+
         elif user_in == "quit":
+            print("Goodbye!")
             sys.exit(0)
+
         else:
             print("lol not done yet")
 
-def sub_menu(at):
 
+def sub_menu(at):
+    print("\nType a command, help shows all valid commands")
+    user_in = raw_input(">> ")
+
+    if user_in == "help":
+        print("commands")
+
+    elif user_in == "return":
+        main_menu()
+
+    elif user_in == "participants":
+        # prints participants in the debate
+        print("")
+
+    elif user_in == "moderators":
+        # prints the moderators
+        print("")
+
+    elif user_in == "words":
+        # choose total words spoken or break down by candidates
+        print("")
+
+    elif user_in == "concordance":
+        # select a word and a candidate, gives back concordance
+        print("")
+
+    elif user_in == "quit":
+        print("Goodbye!")
+        sys.exit(0)
 
 
 def select_debate():
@@ -155,8 +189,7 @@ def trim_tokens(tokens):
 
 
 def main():
-    print("Welcome! Are you ready to 'Make AI Great Again?'\ntype a command, help will show all commands, quit will"
-          " exit the program\n")
+    print("Welcome! Are you ready to 'Make AI Great Again?'")
     main_menu()
 
 if __name__ == '__main__':
