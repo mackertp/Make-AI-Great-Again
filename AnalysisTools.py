@@ -35,6 +35,7 @@ class AnalysisTools:
         percent = '%.2f%%' % ((candidate_total / float(total))*100)
         return '%s spoke %d words (%s of the total words spoken by the candidates)' % (candidate, candidate_total,
                                                                                        percent)
+
     def words_by_all_candidates(self):
         answer = ''
         for part in self.participants:
