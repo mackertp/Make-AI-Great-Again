@@ -43,7 +43,7 @@ def sub_menu(at):
     user_in = raw_input(">> ")
 
     if user_in == "help":
-        print("\n1) print participants\n2) print moderators")
+        print("\n1) print participants\n2) print moderators\n3) print all the words spoken by candidates\n4) ")
         sub_menu(at)
 
     elif user_in == "return":
@@ -99,12 +99,12 @@ def select_debate():
     user_in = raw_input(">> ")
     if user_in == "1":
         # select form democrat debates
-        print("\nSelect one of the debates:\n1) Las Vegas 10-13-15\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
-              "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Miami 3-9-16\n9) "
-              "Brooklyn 4-14-16\n")
+        print("\nSelect one of the debates:\n1) Miami 3-9-16\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
+              "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Las Vegas 10-13-15\n"
+              "9) Brooklyn 4-14-16\n")
         select = raw_input(">> ")
         if select == "1":
-            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112719"
         elif select == "2":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110910"
         elif select == "3":
@@ -118,7 +118,7 @@ def select_debate():
         elif select == "7":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112718"
         elif select == "8":
-            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112719"
+            url = "http: // www.presidency.ucsb.edu / ws / index.php?pid = 110903"
         elif select == "9":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=116995"
         else:
