@@ -184,7 +184,6 @@ def trim_tokens(tokens):
         elif tokens[i] == 'Citation' and tokens[i+1] == ':':
             end = i
             break
-        i += 1
     return tokens[start:end]
 
 
