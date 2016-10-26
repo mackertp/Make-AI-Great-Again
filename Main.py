@@ -5,6 +5,7 @@ import re
 import bs4
 from urllib import urlopen
 from bs4 import BeautifulSoup
+import AnalysisTools
 
 """
 Debate analyzer project
@@ -19,28 +20,32 @@ def main_menu():
     quit_prog = False
     while not quit_prog:
         if user_in == "help":
-            print("select -- pick a debate to be analyzed")
+            print("help -- show options\nselect -- pick a debate to be analyzed\nquit -- quits program")
             main_menu()
         elif user_in == "select":
             url = select_debate()
-            print(url)
-            main_menu()
+            clean_text = clean_and_tag(url)
+            at = AnalysisTools(clean_text)
+            sub_menu(at)
         elif user_in == "quit":
             sys.exit(0)
         else:
             print("lol not done yet")
 
+def sub_menu(at):
+
+
 
 def select_debate():
-    print("Select a debate from:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4) General Election\n5) "
-          "add your own!")
+    print("\nSelect a debate from:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4) General Election\n5)"
+          " add your own!\n")
     url = ""
     user_in = raw_input(">> ")
     if user_in == "1":
         # select form democrat debates
         print("\nSelect one of the debates:\n1) Las Vegas 10-13-15\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
               "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Miami 3-9-16\n9) "
-              "Brooklyn 4-14-16")
+              "Brooklyn 4-14-16\n")
         select = raw_input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
@@ -67,7 +72,7 @@ def select_debate():
         # select from republican debates
         print("\nSelect one of the debates:\n1) Cleveland 8-6-15\n2) Simi Valley 9-16-15\n3) Boulder 10-28-15\n4) "
               "Milwaukee 11-10-15\n5) Las Vegas 12-15-15\n6) North Charleston 1-14-16\n7) Des Moines 1-28-16\n8) "
-              "Manchester 2-6-16\n9) Greenville 2-13-16\n10) Houston 2-25-16\n11) Detroit 3-3-16\n12) Miami 3-10-16")
+              "Manchester 2-6-16\n9) Greenville 2-13-16\n10) Houston 2-25-16\n11) Detroit 3-3-16\n12) Miami 3-10-16\n")
         select = raw_input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110489"
@@ -102,8 +107,8 @@ def select_debate():
 
     elif user_in == "4":
         # debates from the general election will be options
-        print("Select one of the debates:\n1) Hofstra 9-26-16\n2) Washington University 10-9-16\n3) University Nevada"
-              " 10-19-16")
+        print("\nSelect one of the debates:\n1) Hofstra 9-26-16\n2) Washington University 10-9-16\n3) University Nevada"
+              " 10-19-16\n")
         select = raw_input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=118971"
@@ -148,9 +153,10 @@ def trim_tokens(tokens):
         i += 1
     return tokens[start:end]
 
+
 def main():
     print("Welcome! Are you ready to 'Make AI Great Again?'\ntype a command, help will show all commands, quit will"
-          "exit the program")
+          " exit the program\n")
     main_menu()
 
 if __name__ == '__main__':
