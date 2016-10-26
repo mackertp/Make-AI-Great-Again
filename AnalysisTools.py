@@ -17,6 +17,12 @@ class AnalysisTools:
         self.participants, self.moderators = self.get_people()
 
 
+    def get_participants(self):
+        return self.participants
+
+    def get_moderators(self):
+        return self.moderators
+
     def get_people(self):
         people = []
         part_string = ''
