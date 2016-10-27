@@ -169,6 +169,7 @@ def select_debate():
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=116995"
         else:
             print("Invalid command, no debate selected")
+            select_debate()
 
     elif user_in == "2":
         # select from republican primary debates
