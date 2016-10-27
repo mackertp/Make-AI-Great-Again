@@ -262,7 +262,7 @@ def trim_tokens(tokens):
 
 
 def main():
-    """ Main call, runs the program"""
+    """ Main call, runs the program """
     print("Welcome! Are you ready to 'Make AI Great Again?'")
     main_menu()
 
