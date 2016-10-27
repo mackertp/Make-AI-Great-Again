@@ -32,8 +32,8 @@ def main_menu():
             clean_text = clean_and_tag(url)
             at = AnalysisTools(clean_text)
             print("\nDebate selected, perform analysis on this debate with the following commands!\n1) print "
-                  "participants\n2) print moderators\n3) print total number of words by candidates\n4) print out number "
-                  "of words for each candidate\n5) print number of words for specific candidate\n6) print out "
+                  "participants\n2) print moderators\n3) print total number of words by candidates\n4) print out number"
+                  " of words for each candidate\n5) print number of words for specific candidate\n6) print out "
                   "concordance for a word and candidate")
             sub_menu(at)
 
@@ -129,8 +129,8 @@ def sub_menu(at):
 
 def select_debate():
     """ Method for selecting a debate, has stored all the 2016 election debates, or can add your own by url """
-    print("\nSelect a debate from 2016 or add your own:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4)"
-          " General Election\n5) add your own!\n")
+    print("\nSelect a debate from 2016:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4)"
+          " General Election\n")    # 5) add your own!\n
     url = ""
     user_in = raw_input(">> ")
     if user_in == "1":
@@ -211,13 +211,14 @@ def select_debate():
         else:
             print("invalid command, no url selected")
 
-    elif user_in == "5":
+    # elif user_in == "5":
         # add your own debate... type the url and boom there ya have it
-        print("\nType in a valid url for the debate so we can analyze it for you!")
-        url = raw_input(">> ")
+        """ took this out because it wasn't working correctly, couldn't handle url errors """
+    #    print("\nType in a valid url for the debate so we can analyze it for you!")
+    #    url = raw_input(">> ")
 
     else:
-        print("Invalid command, type a valid option (1-5)")
+        print("Invalid command, type a valid option (1-4)")
         select_debate()
 
     return url

@@ -17,7 +17,7 @@ class AnalysisTools:
         """Set up data structures for use by methods. Call to the get_pepole method to set up
         the lists of participants and moderators. Call to the parse_text method to set up  and
         populate the speak, word, and reaction dictionaries. Use participants and word_dict to
-        set up text_dict to use for concordancecs."""
+        set up text_dict to use for concordances."""
         assert isinstance(text, nltk.Text)
         self.text = text
         self.participants, self.moderators = self.get_people()
