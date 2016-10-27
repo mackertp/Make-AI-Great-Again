@@ -144,7 +144,7 @@ def select_debate():
         elif select == "7":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112718"
         elif select == "8":
-            url = "http: // www.presidency.ucsb.edu / ws / index.php?pid = 110903"
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
         elif select == "9":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=116995"
         else:

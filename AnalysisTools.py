@@ -88,7 +88,7 @@ class AnalysisTools:
                     except AttributeError:
                         i += 1  # necessary for one of the debates, some weird error in the tagger...
                         continue
-                exclude = ['PARTICIPANTS', 'MODERATORS', 'MODERATOR', 'PANELISTS', 'CNN']
+                exclude = ['PARTICIPANTS', 'MODERATORS', 'MODERATOR', 'PANELISTS', 'CNN', 'ClINTON']
                 if name not in people and name not in exclude:
                     people.append(name)
             if self.text[i][0] == 'PARTICIPANTS':
