@@ -1,6 +1,6 @@
-#!/usr/bin/env python
 import nltk
 import re
+
 """
 Debate analyzer project ("Make AI Great Again")
 AnalysisTools class

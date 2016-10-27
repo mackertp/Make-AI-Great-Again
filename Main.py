@@ -10,7 +10,7 @@ Debate analyzer project ("Make AI Great Again")
 Main class
 -- creates the menu based program for analyzing debates
 
-Preston Mackert, Dylan Telford, Alexis Grebenok, Jerry Daigler
+Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 10/26/16
 """
 
@@ -95,11 +95,10 @@ def sub_menu(at):
 
     elif user_in == "5":
         can_num = 1
-        print("\nSelect a candidate:\n")
+        print("\nSelect a candidate:")
         for name in at.get_participants():
             print("%d) %s" % (can_num, name))
             can_num += 1
-        print("\n")
         select = raw_input(">> ")
         candidate = at.get_participants()[int(select)-1]
         print("\n" + at.words_by_candidate(candidate) + "\n")
@@ -136,12 +135,12 @@ def select_debate():
     user_in = raw_input(">> ")
     if user_in == "1":
         # select form democratic primary debates
-        print("\nSelect one of the debates:\n1) Miami 3-9-16\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
-              "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Las Vegas 10-13-15\n"
+        print("\nSelect one of the debates:\n1) Las Vegas 10-13-15\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
+              "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Miami 3-9-16\n"
               "9) Brooklyn 4-14-16\n")
         select = raw_input(">> ")
         if select == "1":
-            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112719"
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
         elif select == "2":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110910"
         elif select == "3":
@@ -155,7 +154,7 @@ def select_debate():
         elif select == "7":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112718"
         elif select == "8":
-            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
+            url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112719"
         elif select == "9":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=116995"
         else:
