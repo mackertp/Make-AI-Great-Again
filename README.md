@@ -1,12 +1,9 @@
 # DebateAnalyzer
 Program for analyzing the debates throughout the presidential election
 
-Menu system used to select a debate. The following debates will be included:
-
-1 Republican Primary
-1 Democratic Primary
-VP General Election
-3 General Election
+Menu system used to select a debate. All of the 2016 election debates
+are available for analysis, and you have the capability to add your 
+own debate by providing the url.
 
 For each debate, we will be able to find the following information:
 
