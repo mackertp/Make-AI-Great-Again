@@ -6,7 +6,9 @@ from bs4 import BeautifulSoup
 from AnalysisTools import AnalysisTools
 
 """
-Debate analyzer project
+Debate analyzer project ("Make AI Great Again")
+Main class
+-- creates the menu based program for analyzing debates
 
 Preston Mackert, Dylan Telford, Alexis Grebenok, Jerry Daigler
 10/26/16
@@ -14,7 +16,8 @@ Preston Mackert, Dylan Telford, Alexis Grebenok, Jerry Daigler
 
 
 def main_menu():
-    print("Type a command, help shows all commands, quit will exit the program\n")
+    """ Main menu for the program. Forces you to select a debate for analysis """
+    print("Type 'select' to pick a debate for analysis, 'help' shows all commands, 'quit' will exit the program")
     user_in = raw_input(">> ")
     quit_prog = False
 
@@ -25,8 +28,13 @@ def main_menu():
 
         elif user_in == "select":
             url = select_debate()
+            print("processing text...")
             clean_text = clean_and_tag(url)
             at = AnalysisTools(clean_text)
+            print("\nDebate selected, perform analysis on this debate with the following commands!\n1) print "
+                  "participants\n2) print moderators\n3) print total number of words by candidates\n4) print out number "
+                  "of words for each candidate\n5) print number of words for specific candidate\n6) print out "
+                  "concordance for a word and candidate")
             sub_menu(at)
 
         elif user_in == "quit":
@@ -39,13 +47,15 @@ def main_menu():
 
 
 def sub_menu(at):
+    """ Sub menu, once a debate is selected this menu provides the options for analyzing the text """
     print("\nType a command, 'help' shows all valid commands, 'return' sends back to main menu")
     user_in = raw_input(">> ")
 
     if user_in == "help":
         print("\n1) print participants\n2) print moderators\n3) print total number of words by candidates\n4) "
               "print out number of words for each candidate\n5) print number of words for specific candidate\n6) print"
-              "out concordance for a word and candidate")
+              "out concordance for a word and candidate\n'help' -- prints out all commands\n'return' -- sends back to "
+              "main menu\n'quit' -- quits the program")
         sub_menu(at)
 
     elif user_in == "return":
@@ -119,12 +129,13 @@ def sub_menu(at):
 
 
 def select_debate():
-    print("\nSelect a debate from:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4) General Election\n5)"
-          " add your own!\n")
+    """ Method for selecting a debate, has stored all the 2016 election debates, or can add your own by url """
+    print("\nSelect a debate from 2016 or add your own:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4)"
+          " General Election\n5) add your own!\n")
     url = ""
     user_in = raw_input(">> ")
     if user_in == "1":
-        # select form democrat debates
+        # select form democratic primary debates
         print("\nSelect one of the debates:\n1) Miami 3-9-16\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
               "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Las Vegas 10-13-15\n"
               "9) Brooklyn 4-14-16\n")
@@ -151,7 +162,7 @@ def select_debate():
             print("Invalid command, no debate selected")
 
     elif user_in == "2":
-        # select from republican debates
+        # select from republican primary debates
         print("\nSelect one of the debates:\n1) Cleveland 8-6-15\n2) Simi Valley 9-16-15\n3) Boulder 10-28-15\n4) "
               "Milwaukee 11-10-15\n5) Las Vegas 12-15-15\n6) North Charleston 1-14-16\n7) Des Moines 1-28-16\n8) "
               "Manchester 2-6-16\n9) Greenville 2-13-16\n10) Houston 2-25-16\n11) Detroit 3-3-16\n12) Miami 3-10-16\n")
@@ -184,7 +195,7 @@ def select_debate():
             print("Invalid command, no url selected")
 
     elif user_in == "3":
-        # the VP debate is selected, only one exists
+        # the 2016 VP debate is selected, only one exists
         url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119012"
 
     elif user_in == "4":
@@ -202,6 +213,8 @@ def select_debate():
             print("invalid command, no url selected")
 
     elif user_in == "5":
+        # add your own debate... type the url and boom there ya have it
+        print("\nType in a valid url for the debate so we can analyze it for you!")
         url = raw_input(">> ")
 
     else:
@@ -239,6 +252,7 @@ def trim_tokens(tokens):
 
 
 def main():
+    """ Main call, runs the program"""
     print("Welcome! Are you ready to 'Make AI Great Again?'")
     main_menu()
 

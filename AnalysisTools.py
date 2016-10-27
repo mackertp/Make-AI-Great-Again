@@ -2,11 +2,12 @@
 import nltk
 import re
 """
-AnalysisTools class for Make-AI-Great-Again
-
-methods used to analyze clean debate transcripts
+Debate analyzer project ("Make AI Great Again")
+AnalysisTools class
+-- methods used to analyze clean debate transcripts
 
 Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
+10/26/16
 """
 
 
