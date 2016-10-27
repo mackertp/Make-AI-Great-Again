@@ -212,7 +212,10 @@ def select_debate():
 
 
 def clean_and_tag(url):
-    """"""
+    """given a url for a debate, obtain the page text with urlopen, clean it with
+    BeautifulSoup, tokenize with nltk.word_tokenize(), trim leading and trailing
+    garbage with a call to trim_tokens(), tag the tokens with nltk.pos_tag(), and
+    return a text object made with tagged_tokens."""
     raw = urlopen(url).read()
     soup = BeautifulSoup(raw, 'html.parser')
     cleaned = BeautifulSoup.get_text(soup)

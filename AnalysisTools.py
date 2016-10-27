@@ -6,12 +6,17 @@ AnalysisTools class for Make-AI-Great-Again
 
 methods used to analyze clean debate transcripts
 
+Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 """
 
 
 class AnalysisTools:
+    """Take in a nltk.Text object and run analysis methods on it."""
     def __init__(self, text):
-        """Take in a nltk.Text object to run analysis methods on"""
+        """Set up data structures for use by methods. Call to the get_pepole method to set up
+        the lists of participants and moderators. Call to the parse_text method to set up  and
+        populate the speak, word, and reaction dictionaries. Use participants and word_dict to
+        set up text_dict to use for concordancecs."""
         assert isinstance(text, nltk.Text)
         self.text = text
         self.participants, self.moderators = self.get_people()
@@ -24,12 +29,15 @@ class AnalysisTools:
             self.text_dict[part] = nltk.Text(self.word_dict[part])
 
     def total_words(self):
+        """returns the total number of words spoken by the group of candidates."""
         total = 0
         for part in self.participants:
-            total += len(self.word_dict[part])
+            total += len(self.word_dict[part])  # sum up word_dict
         return total
 
     def words_by_candidate(self, candidate):
+        """returns a string describing how many words (and what percent of the total)
+        a given candidate spoke."""
         candidate_total = len(self.word_dict[candidate])
         total = self.total_words()
         percent = '%.2f%%' % ((candidate_total / float(total))*100)
@@ -37,22 +45,33 @@ class AnalysisTools:
                                                                                        percent)
 
     def words_by_all_candidates(self):
+        """returns a multi-line string with as many lines as candidates, where each
+        line is the result of a call to words_by_candidates() with a candidate."""
         answer = ''
         for part in self.participants:
             answer += self.words_by_candidate(part) + '\n'
         return answer
 
     def get_concordance(self, candidate, topic):
-        my_text = self.text_dict[candidate]
+        """given a candidate's last name and a one-word topic, this returns an nltk.Text
+        concordance for that word from the Text object corresponding to that candidate."""
+        my_text = self.text_dict[candidate.upper()]
         return my_text.concordance(topic)
 
     def get_participants(self):
+        """returns a list of participants' last names in all caps."""
         return self.participants
 
     def get_moderators(self):
+        """returns a list of moderators' last names in all caps."""
         return self.moderators
 
     def get_people(self):
+        """iterates over self.text, populating a list of people, using a regular expression to
+        pick out words in all caps followed by a colon. Account for exceptions that should not be
+        included (like CNN, PARTICIPANTS, etc.). Then, extract the sentences introducing the
+        participants and moderators, and compare the list of people to these to compile and return
+        two separate lists for participants and moderators."""
         people = []
         part_string = ''
         mod_string = ''
@@ -61,13 +80,13 @@ class AnalysisTools:
         while i < len(self.text):
             if speaker_pattern.match(self.text[i][0]) and self.text[i+1][0] == ':':
                 name = self.text[i][0]
-                if '.' in name:  # might be causing error where it enters but does not match second expression
+                if '.' in name:
                     name_pattern = re.compile(r'^.*\.+([A-Z]+)$')  # weird error with tonkenizer, some are "word.TRUMP"
                     name_match = re.search(name_pattern, name)
                     try:
                         name = name_match.group(1)  # get only name
                     except AttributeError:
-                        i += 1
+                        i += 1  # necessary for one of the debates, some weird error in the tagger...
                         continue
                 exclude = ['PARTICIPANTS', 'MODERATORS', 'MODERATOR', 'PANELISTS', 'CNN']
                 if name not in people and name not in exclude:
@@ -94,9 +113,14 @@ class AnalysisTools:
         return (parts, mods)
 
     def parse_text(self):
-        sd = {}  # speak dictionary
-        wd = {}  # word dictionary
-        rd = {}  # reaction dictionary
+        """create the speak, word, and reaction dictionaries using self.candidates and self.moderators.
+        Iterate through self.text with a state machine, keeping track of the current
+        speaker. Add each word said to the speaker's wd value (list), while incrementing the appropriate
+        value (int) in sd every time the speaker changes. Keep track of reactions (in between []) in rd.
+        return the three dictionaries in a list."""
+        sd = {}  # speak dictionary maps speaker (string) to # of times speaking (int)
+        wd = {}  # word dictionary maps speaker (string) to list of words said ([strings])
+        rd = {}  # reaction dictionary maps reaction (string) to occurrences (int)
         for mod in self.moderators:
             sd[mod] = 0
             wd[mod] = []
@@ -106,10 +130,10 @@ class AnalysisTools:
         current_speaker = ''
         speaker_pattern = re.compile(r'^.*[A-Z][A-Z]+$')
         for i in range(len(self.text)):
-            if speaker_pattern.match(self.text[i][0]) and self.text[i + 1][0] == ':':  # if its a new speaker, change current speaker
+            if speaker_pattern.match(self.text[i][0]) and self.text[i + 1][0] == ':':  # all caps followed by colon
                 name = self.text[i][0]
-                if '.' in name:
-                    name_pattern = re.compile(r'^.*\.+([A-Z]+)$')  # weird error with tonkenizer, some are "word.TRUMP"
+                if '.' in name:  # weird error with tonkenizer, some are "word.TRUMP"
+                    name_pattern = re.compile(r'^.*\.+([A-Z]+)$')
                     name_match = re.search(name_pattern, name)
                     try:
                         current_speaker = name_match.group(1)  # get only name
