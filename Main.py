@@ -70,7 +70,7 @@ def sub_menu(at):
                 output += name + ", "
             else:
                 output += name
-        print("\n" + output + "\n")
+        print("\nParticipants: " + output + "\n")
         sub_menu(at)
 
     elif user_in == "2":
@@ -81,12 +81,12 @@ def sub_menu(at):
                 output += name + ", "
             else:
                 output += name
-        print("\n" + output + "\n")
+        print("\nModerators: " + output + "\n")
         sub_menu(at)
 
     elif user_in == "3":
         # choose total words spoken or break down by candidates
-        print("\ntotal words spoken by candidates: " + str(at.total_words()) + "\n")
+        print("\nTotal words spoken by candidates: " + str(at.total_words()) + "\n")
         sub_menu(at)
 
     elif user_in == "4":
@@ -100,7 +100,11 @@ def sub_menu(at):
             print("%d) %s" % (can_num, name))
             can_num += 1
         select = raw_input(">> ")
-        candidate = at.get_participants()[int(select)-1]
+        try:
+            candidate = at.get_participants()[int(select)-1]
+        except (IndexError, ValueError):
+            print("No valid candidate selected")
+            sub_menu(at)
         print("\n" + at.words_by_candidate(candidate) + "\n")
         sub_menu(at)
 
@@ -112,7 +116,11 @@ def sub_menu(at):
             print("%d) %s" % (can_num, name))
             can_num += 1
         select = raw_input(">> ")
-        candidate = at.get_participants()[int(select) - 1]
+        try:
+            candidate = at.get_participants()[int(select) - 1]
+        except (IndexError, ValueError):
+            print("No valid candidate selected")
+            sub_menu(at)
         print("\nSelect a word to look for")
         word = raw_input(">> ")
         at.get_concordance(candidate, word)
