@@ -12,12 +12,12 @@ Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 
 
 class AnalysisTools:
-    """Take in a nltk.Text object and run analysis methods on it."""
+    """ Take in a nltk.Text object and run analysis methods on it """
     def __init__(self, text):
-        """Set up data structures for use by methods. Call to the get_people method to set up
+        """ Set up data structures for use by methods. Call to the get_people method to set up
         the lists of participants and moderators. Call to the parse_text method to set up  and
         populate the speak, word, and reaction dictionaries. Use participants and word_dict to
-        set up text_dict to use for concordances."""
+        set up text_dict to use for concordances """
         assert isinstance(text, nltk.Text)
         self.text = text
         self.participants, self.moderators = self.get_people()
@@ -30,15 +30,15 @@ class AnalysisTools:
             self.text_dict[part] = nltk.Text(self.word_dict[part])
 
     def total_words(self):
-        """returns the total number of words spoken by the group of candidates."""
+        """ returns the total number of words spoken by the group of candidates """
         total = 0
         for part in self.participants:
             total += len(self.word_dict[part])  # sum up word_dict
         return total
 
     def words_by_candidate(self, candidate):
-        """returns a string describing how many words (and what percent of the total)
-        a given candidate spoke."""
+        """ returns a string describing how many words (and what percent of the total)
+        a given candidate spoke """
         candidate_total = len(self.word_dict[candidate])
         total = self.total_words()
         percent = '%.2f%%' % ((candidate_total / float(total))*100)
@@ -46,33 +46,33 @@ class AnalysisTools:
                                                                                        percent)
 
     def words_by_all_candidates(self):
-        """returns a multi-line string with as many lines as candidates, where each
-        line is the result of a call to words_by_candidates() with a candidate."""
+        """ returns a multi-line string with as many lines as candidates, where each
+        line is the result of a call to words_by_candidates() with a candidate """
         answer = ''
         for part in self.participants:
             answer += self.words_by_candidate(part) + '\n'
         return answer
 
     def get_concordance(self, candidate, topic):
-        """given a candidate's last name and a one-word topic, this returns an nltk.Text
-        concordance for that word from the Text object corresponding to that candidate."""
+        """ given a candidate's last name and a one-word topic, this returns an nltk.Text
+        concordance for that word from the Text object corresponding to that candidate """
         my_text = self.text_dict[candidate.upper()]
         return my_text.concordance(topic)
 
     def get_participants(self):
-        """returns a list of participants' last names in all caps."""
+        """ returns a list of participants' last names in all caps """
         return self.participants
 
     def get_moderators(self):
-        """returns a list of moderators' last names in all caps."""
+        """ returns a list of moderators' last names in all caps """
         return self.moderators
 
     def get_people(self):
-        """iterates over self.text, populating a list of people, using a regular expression to
+        """ iterates over self.text, populating a list of people, using a regular expression to
         pick out words in all caps followed by a colon. Account for exceptions that should not be
         included (like CNN, PARTICIPANTS, etc.). Then, extract the sentences introducing the
         participants and moderators, and compare the list of people to these to compile and return
-        two separate lists for participants and moderators."""
+        two separate lists for participants and moderators """
         people = []
         part_string = ''
         mod_string = ''
@@ -82,7 +82,7 @@ class AnalysisTools:
             if speaker_pattern.match(self.text[i][0]) and self.text[i+1][0] == ':':
                 name = self.text[i][0]
                 if '.' in name:
-                    name_pattern = re.compile(r'^.*\.+([A-Z]+)$')  # weird error with tonkenizer, some are "word.TRUMP"
+                    name_pattern = re.compile(r'^.*\.+([A-Z]+)$')  # weird error with tokenizer, some are "word.TRUMP"
                     name_match = re.search(name_pattern, name)
                     try:
                         name = name_match.group(1)  # get only name
@@ -111,14 +111,14 @@ class AnalysisTools:
                 parts.append(name.upper())
             elif name in mod_string.split():
                 mods.append(name.upper())
-        return (parts, mods)
+        return parts, mods
 
     def parse_text(self):
-        """create the speak, word, and reaction dictionaries using self.candidates and self.moderators.
+        """ create the speak, word, and reaction dictionaries using self.candidates and self.moderators.
         Iterate through self.text with a state machine, keeping track of the current
         speaker. Add each word said to the speaker's wd value (list), while incrementing the appropriate
         value (int) in sd every time the speaker changes. Keep track of reactions (in between []) in rd.
-        return the three dictionaries in a list."""
+        return the three dictionaries in a list """
         sd = {}  # speak dictionary maps speaker (string) to # of times speaking (int)
         wd = {}  # word dictionary maps speaker (string) to list of words said ([strings])
         rd = {}  # reaction dictionary maps reaction (string) to occurrences (int)

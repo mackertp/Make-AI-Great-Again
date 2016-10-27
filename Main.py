@@ -100,6 +100,7 @@ def sub_menu(at):
             print("%d) %s" % (can_num, name))
             can_num += 1
         select = raw_input(">> ")
+        candidate = ""
         try:
             candidate = at.get_participants()[int(select)-1]
         except (IndexError, ValueError):
@@ -116,6 +117,7 @@ def sub_menu(at):
             print("%d) %s" % (can_num, name))
             can_num += 1
         select = raw_input(">> ")
+        candidate = ""
         try:
             candidate = at.get_participants()[int(select) - 1]
         except (IndexError, ValueError):
@@ -233,10 +235,10 @@ def select_debate():
 
 
 def clean_and_tag(url):
-    """given a url for a debate, obtain the page text with urlopen, clean it with
+    """ given a url for a debate, obtain the page text with urlopen, clean it with
     BeautifulSoup, tokenize with nltk.word_tokenize(), trim leading and trailing
     garbage with a call to trim_tokens(), tag the tokens with nltk.pos_tag(), and
-    return a text object made with tagged_tokens."""
+    return a text object made with tagged_tokens """
     raw = urlopen(url).read()
     soup = BeautifulSoup(raw, 'html.parser')
     cleaned = BeautifulSoup.get_text(soup)
@@ -247,7 +249,7 @@ def clean_and_tag(url):
 
 
 def trim_tokens(tokens):
-    """Removes garbage from beginning and end of tokens"""
+    """ Removes garbage from beginning and end of tokens """
     start = 0
     end = len(tokens)-1
     for i in range(len(tokens)):
