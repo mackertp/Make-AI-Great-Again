@@ -14,7 +14,7 @@ Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 class AnalysisTools:
     """Take in a nltk.Text object and run analysis methods on it."""
     def __init__(self, text):
-        """Set up data structures for use by methods. Call to the get_pepole method to set up
+        """Set up data structures for use by methods. Call to the get_people method to set up
         the lists of participants and moderators. Call to the parse_text method to set up  and
         populate the speak, word, and reaction dictionaries. Use participants and word_dict to
         set up text_dict to use for concordances."""
