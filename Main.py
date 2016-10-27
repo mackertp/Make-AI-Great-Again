@@ -202,6 +202,7 @@ def select_debate():
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=115148"
         else:
             print("Invalid command, no url selected")
+            select_debate()
 
     elif user_in == "3":
         # the 2016 VP debate is selected, only one exists
@@ -220,6 +221,7 @@ def select_debate():
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119039"
         else:
             print("invalid command, no url selected")
+            select_debate()
 
     # elif user_in == "5":
         # add your own debate... type the url and boom there ya have it
