@@ -126,6 +126,7 @@ def sub_menu(at):
         print("\nSelect a word to look for")
         word = raw_input(">> ")
         at.get_concordance(candidate, word)
+        # print(at.make_concordance(candidate, word))  # * for testing our own concordance function *
         sub_menu(at)
 
     elif user_in == "quit":
