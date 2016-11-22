@@ -1,4 +1,8 @@
-import tweepy
+from __future__ import print_function
+try:
+    import tweepy
+except IOError:
+    print('This application requires the tweepy python module.\nInstall with "pip install tweepy"')
 
 """
 Debate analyzer project ("Make AI Great Again")
