@@ -34,7 +34,7 @@ def main_menu():
             print("\nDebate selected, perform analysis on this debate with the following commands!\n1) print "
                   "participants\n2) print moderators\n3) print total number of words by candidates\n4) print out number"
                   " of words for each candidate\n5) print number of words for specific candidate\n6) print out "
-                  "concordance for a word and candidate")
+                  "concordance for a word and candidate\n7) Twitter tools!")
             sub_menu(at)
 
         elif user_in == "quit":
@@ -129,6 +129,8 @@ def sub_menu(at):
         # print(at.make_concordance(candidate, word))  # * for testing our own concordance function *
         sub_menu(at)
 
+    elif user_in == "7":
+        twitter_menu(at)
     elif user_in == "quit":
         print("Goodbye!")
         sys.exit(0)
@@ -136,6 +138,34 @@ def sub_menu(at):
     else:
         print("Invalid command, type 'help' to see a list of all valid commands\n")
         sub_menu(at)
+
+
+def twitter_menu(at):
+    print("\nFind out what the world had to say! Select a candidate and explore twitter!\n\nSelect a candidate:")
+    can_num = 1
+    for name in at.get_participants():
+        print("%d) %s" % (can_num, name))
+        can_num += 1
+    select = raw_input(">> ")
+    candidate = ""
+    try:
+        candidate = at.get_participants()[int(select) - 1]
+    except (IndexError, ValueError):
+        print("No valid candidate selected")
+
+    topics = at.candidate_topics(candidate)
+
+    print("\nThese were %s's most discussed topics, pick one!\n" % candidate)
+    topic_num = 1
+    for topic in topics:
+        print("%d) %s" % (topic_num, topic))
+        topic_num += 1
+    select = raw_input("\n>> ")
+    try:
+        topic = topics[int(select)-1]
+        print(topic)
+    except (IndexError, ValueError):
+        print("Invalid selection")
 
 
 def select_debate():
