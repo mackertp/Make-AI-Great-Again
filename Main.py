@@ -16,7 +16,9 @@ Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 
 
 def main_menu():
-    """ Main menu for the program. Forces you to select a debate for analysis """
+    """
+    Main menu for the program. Forces you to select a debate for analysis
+    """
     print("Type 'select' to pick a debate for analysis, 'help' shows all commands, 'quit' will exit the program")
     user_in = raw_input(">> ")
     quit_prog = False
@@ -47,7 +49,9 @@ def main_menu():
 
 
 def sub_menu(at):
-    """ Sub menu, once a debate is selected this menu provides the options for analyzing the text """
+    """
+    Sub menu, once a debate is selected this menu provides the options for analyzing the text
+    """
     print("\nType a command, 'help' shows all valid commands, 'return' sends back to main menu")
     user_in = raw_input(">> ")
 
@@ -141,6 +145,11 @@ def sub_menu(at):
 
 
 def twitter_menu(at):
+    """
+    Sub Menu for using our twitter tools. Allows the user to pick a candidate to find topics using nltk collocations.
+    A list of the topics will be presented, then the user can search candidate, opponents, or all of twitter to see
+    what users had to say about the topics being discussed in the debate! More options and features to come.
+    """
     print("\nFind out what the world had to say! Select a candidate and explore twitter!\n\nSelect a candidate:")
     can_num = 1
     for name in at.get_participants():

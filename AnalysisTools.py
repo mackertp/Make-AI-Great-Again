@@ -58,14 +58,14 @@ class AnalysisTools:
         txt = nltk.Text(self.word_dict[candidate])
         with Capturing() as collocations:
             txt.collocations()
-        allcolls = ""
+        all_colls = ""
         for item in collocations:
-            allcolls += " " + item
-        topics = allcolls.split(";")
+            all_colls += " " + item
+        topics = all_colls.split(";")
 
-        dontInclude = []
+        dont_include = []
         for topic in topics:
-            if topic in dontInclude:
+            if topic in dont_include:
                 topics.remove(topic)
 
         return topics
