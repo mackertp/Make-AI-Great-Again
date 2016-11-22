@@ -125,6 +125,7 @@ class AnalysisTools:
         iterate over self.text, searching for the word or a list of words in onder.
         if found, backtrack until you find the start of the sentence, record index,
         look ahead until you find period, join into a string and save in list.
+        *** NOT WORKING RIGHT NOW, JUST USING NLTK.TEXT.CONCORDANCE() ***
         """
         my_text = self.text_dict[candidate]
         print my_text
