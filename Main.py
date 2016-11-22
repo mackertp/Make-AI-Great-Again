@@ -4,6 +4,7 @@ import nltk
 from urllib import urlopen
 from bs4 import BeautifulSoup
 from AnalysisTools import AnalysisTools
+from TwitterTools import *
 
 """
 Debate analyzer project ("Make AI Great Again")
@@ -172,7 +173,8 @@ def twitter_menu(at):
     select = raw_input("\n>> ")
     try:
         topic = topics[int(select)-1]
-        print(topic)
+        tweets = candidate_search(topic, candidate)
+        print(tweets)
     except (IndexError, ValueError):
         print("Invalid selection")
 
