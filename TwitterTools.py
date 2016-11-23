@@ -26,7 +26,7 @@ auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 
-def candidate_search(topic, candidate):
+def candidate_search(topic, candidate, date):
     # need to get date of debate and filter through
     topic += '@%s' % candidate_twitters[candidate]
     results = api.search(q=topic)

@@ -30,7 +30,9 @@ def main_menu():
             main_menu()
 
         elif user_in == "select":
-            url = select_debate()
+            info = select_debate()
+            url = info[0]
+            date = info[1]
             print("processing text...")
             clean_text = clean_and_tag(url)
             at = AnalysisTools(clean_text)
@@ -38,7 +40,7 @@ def main_menu():
                   "participants\n2) print moderators\n3) print total number of words by candidates\n4) print out number"
                   " of words for each candidate\n5) print number of words for specific candidate\n6) print out "
                   "concordance for a word and candidate\n7) Twitter tools!")
-            sub_menu(at)
+            sub_menu(at, date)
 
         elif user_in == "quit":
             print("Goodbye!")
@@ -49,7 +51,7 @@ def main_menu():
             main_menu()
 
 
-def sub_menu(at):
+def sub_menu(at, date):
     """
     Sub menu, once a debate is selected this menu provides the options for analyzing the text
     """
@@ -61,7 +63,7 @@ def sub_menu(at):
               "print out number of words for each candidate\n5) print number of words for specific candidate\n6) print"
               "out concordance for a word and candidate\n'help' -- prints out all commands\n'return' -- sends back to "
               "main menu\n'quit' -- quits the program")
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "return":
         print("\n")
@@ -76,7 +78,7 @@ def sub_menu(at):
             else:
                 output += name
         print("\nParticipants: " + output + "\n")
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "2":
         # prints the moderators
@@ -87,16 +89,16 @@ def sub_menu(at):
             else:
                 output += name
         print("\nModerators: " + output + "\n")
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "3":
         # choose total words spoken or break down by candidates
         print("\nTotal words spoken by candidates: " + str(at.total_words()) + "\n")
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "4":
         print("\n" + at.words_by_all_candidates())
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "5":
         can_num = 1
@@ -110,9 +112,9 @@ def sub_menu(at):
             candidate = at.get_participants()[int(select)-1]
         except (IndexError, ValueError):
             print("No valid candidate selected")
-            sub_menu(at)
+            sub_menu(at, date)
         print("\n" + at.words_by_candidate(candidate) + "\n")
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "6":
         # select a word and a candidate, gives back concordance
@@ -127,41 +129,46 @@ def sub_menu(at):
             candidate = at.get_participants()[int(select) - 1]
         except (IndexError, ValueError):
             print("No valid candidate selected")
-            sub_menu(at)
+            sub_menu(at, date)
         print("\nSelect a word to look for")
         word = raw_input(">> ")
         at.get_concordance(candidate, word)
         # print(at.make_concordance(candidate, word))  # * for testing our own concordance function *
-        sub_menu(at)
+        sub_menu(at, date)
 
     elif user_in == "7":
-        twitter_menu(at)
+        twitter_menu(at, date)
+
     elif user_in == "quit":
         print("Goodbye!")
         sys.exit(0)
 
     else:
         print("Invalid command, type 'help' to see a list of all valid commands\n")
-        sub_menu(at)
+        sub_menu(at, date)
 
 
-def twitter_menu(at):
+def twitter_menu(at, date):
     """
     Sub Menu for using our twitter tools. Allows the user to pick a candidate to find topics using nltk collocations.
     A list of the topics will be presented, then the user can search candidate, opponents, or all of twitter to see
     what users had to say about the topics being discussed in the debate! More options and features to come.
     """
-    print("\nFind out what the world had to say! Select a candidate and explore twitter!\n\nSelect a candidate:")
+    print("\nFind out what the world had to say! Select a candidate and explore twitter! Type return to go back to "
+          "text analysis of the debate.\n\nSelect a candidate:")
     can_num = 1
     for name in at.get_participants():
         print("%d) %s" % (can_num, name))
         can_num += 1
     select = raw_input(">> ")
+    if select == "return":
+        sub_menu(at, date)
     candidate = ""
     try:
         candidate = at.get_participants()[int(select) - 1]
     except (IndexError, ValueError):
         print("No valid candidate selected")
+        twitter_menu(at, date)
 
     topics = at.candidate_topics(candidate)
 
@@ -170,21 +177,33 @@ def twitter_menu(at):
     for topic in topics:
         print("%d) %s" % (topic_num, topic))
         topic_num += 1
+
     select = raw_input("\n>> ")
+
     try:
         topic = topics[int(select)-1]
-        tweets = candidate_search(topic, candidate)
-        print(tweets)
+        tweets = candidate_search(topic, candidate, date)
+        hashtags = []
+        for tweet in tweets:
+            print(tweet.text)
+            print("\n\n")
+
     except (IndexError, ValueError):
         print("Invalid selection")
+        twitter_menu(at, date)
+
+    twitter_menu(at, date)
 
 
 def select_debate():
-    """ Method for selecting a debate, has stored all the 2016 election debates, or can add your own by url """
+    """
+    Method for selecting a debate, has stored all the 2016 election debates, or can add your own by url
+    """
     print("\nSelect a debate from 2016:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4)"
           " General Election\n")    # 5) add your own!\n
     url = ""
     user_in = raw_input(">> ")
+    date = ""
     if user_in == "1":
         # select form democratic primary debates
         print("\nSelect one of the debates:\n1) Las Vegas 10-13-15\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
@@ -193,22 +212,31 @@ def select_debate():
         select = raw_input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
+            date = "2015-10-13"
         elif select == "2":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110910"
+            date = "2015-11-14"
         elif select == "3":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111178"
+            date = "2015-12-19"
         elif select == "4":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111409"
+            date = "2016-01-17"
         elif select == "5":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111471"
+            date = "2016-02-04"
         elif select == "6":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111520"
+            date = "2016-02-11"
         elif select == "7":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112718"
+            date = "2016-03-06"
         elif select == "8":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=112719"
+            date = "2016-03-09"
         elif select == "9":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=116995"
+            date = "2016-04-14"
         else:
             print("Invalid command, no debate selected")
             select_debate()
@@ -221,28 +249,40 @@ def select_debate():
         select = raw_input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110489"
+            date = "2015-08-06"
         elif select == "2":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110756"
+            date = "2015-09-16"
         elif select == "3":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110906"
+            date = "2015-10-28"
         elif select == "4":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110908"
+            date = "2015-11-10"
         elif select == "5":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111177"
+            date = "2015-12-15"
         elif select == "6":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111395"
+            date = "2016-01-14"
         elif select == "7":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111412"
+            date = "2016-01-28"
         elif select == "8":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111472"
+            date = "2016-02-06"
         elif select == "9":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111500"
+            date = "2016-02-13"
         elif select == "10":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111634"
+            date = "2016-02-25"
         elif select == "11":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=111711"
+            date = "2016-03-03"
         elif select == "12":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=115148"
+            date = "2016-03-10"
         else:
             print("Invalid command, no url selected")
             select_debate()
@@ -250,6 +290,7 @@ def select_debate():
     elif user_in == "3":
         # the 2016 VP debate is selected, only one exists
         url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119012"
+        date = "2016-10-4"
 
     elif user_in == "4":
         # debates from the general election will be options
@@ -258,10 +299,13 @@ def select_debate():
         select = raw_input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=118971"
+            date = "2016-09-26"
         elif select == "2":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119038"
+            date = "2016-10-09"
         elif select == "3":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=119039"
+            date = "2016-10-19"
         else:
             print("invalid command, no url selected")
             select_debate()
@@ -269,14 +313,12 @@ def select_debate():
     # elif user_in == "5":
         # add your own debate... type the url and boom there ya have it
         """ took this out because it wasn't working correctly, couldn't handle url errors """
-    #    print("\nType in a valid url for the debate so we can analyze it for you!")
-    #    url = raw_input(">> ")
 
     else:
         print("Invalid command, type a valid option (1-4)")
         select_debate()
 
-    return url
+    return [url, date]
 
 
 def clean_and_tag(url):
