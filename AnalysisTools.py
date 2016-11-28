@@ -271,16 +271,3 @@ class AnalysisTools:
                     if current_speaker in wd:
                         wd[current_speaker].append(word)
         return [sd, wd, rd]
-
-
-    def dontInclude(self,file):
-        """Reads in dontInclude.txt, which contains all phrases that were manually recognized as irrelevant
-            A list of these phrases are returned"""
-        f = open(file,'r')
-        phrases = []
-        for line in f:
-            line = line.rstrip("\n")
-            phrases.append(line)
-        return phrases
-
-
