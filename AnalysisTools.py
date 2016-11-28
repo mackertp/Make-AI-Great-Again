@@ -51,6 +51,7 @@ class AnalysisTools:
         for part in self.participants:
             self.text_dict[part] = nltk.Text(self.word_dict[part])
 
+
     def candidate_topics(self, candidate):
         """
         returns a list of topics for the candidates
@@ -63,7 +64,8 @@ class AnalysisTools:
             all_colls += " " + item
         topics = all_colls.split(";")
 
-        dont_include = []
+        dont_include = self.dontInclude("dontInclude.txt")
+        #dont_include = []
         for topic in topics:
             if topic in dont_include:
                 topics.remove(topic)
@@ -268,3 +270,16 @@ class AnalysisTools:
                     if current_speaker in wd:
                         wd[current_speaker].append(word)
         return [sd, wd, rd]
+
+
+    def dontInclude(self,file):
+        """Reads in dontInclude.txt, which contains all phrases that were manually recognized as irrelevant
+            A list of these phrases are returned"""
+        f = open(file,'r')
+        phrases = []
+        for line in f:
+            line = line.rstrip("\n")
+            phrases.append(line)
+        return phrases
+
+
