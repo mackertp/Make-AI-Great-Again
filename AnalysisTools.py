@@ -51,7 +51,6 @@ class AnalysisTools:
         for part in self.participants:
             self.text_dict[part] = nltk.Text(self.word_dict[part])
 
-
     def candidate_topics(self, candidate):
         """
         returns a list of topics for the candidates
