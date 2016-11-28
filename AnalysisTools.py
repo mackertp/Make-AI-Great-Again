@@ -61,10 +61,12 @@ class AnalysisTools:
         all_colls = ""
         for item in collocations:
             all_colls += " " + item
-        topics = all_colls.split(";")
+        all_colls = all_colls[1:]
+        topics = all_colls.split("; ")
 
-        dont_include = self.dontInclude("dontInclude.txt")
-        #dont_include = []
+        with open("dontInclude.txt") as fh:
+            dont_include = fh.read().splitlines()
+
         for topic in topics:
             if topic in dont_include:
                 topics.remove(topic)
