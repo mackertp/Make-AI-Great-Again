@@ -273,21 +273,68 @@ class AnalysisTools:
                         wd[current_speaker].append(word)
         return [sd, wd, rd]
 
-    def bayes_classify(self):
+    def bayes_classify(self, tweets):
         """
+        create a Naive Bayes Classifier, trained on the sampleTweets.txt file which
+        contains a 1 or 0 (positive or negative) on each line, along with a tweet.
+        Use classifier to figure out percentage of positive tweets sent as argument.
         """
-        with open('sentiments.txt', 'r') as fh:
+        with open('sampleTweets.txt', 'r') as fh:
             text = fh.readlines()
         sents = []
         for line in text:
-            lines = line.split('\t')
+            lines = line.split('   ')
             sents.append((lines[1], lines[0]))
         random.shuffle(sents)
-        test_sents = sents[:1000]
-        devtest_sents = sents[1000:3000]
-        train_sents = sents[3000:]
+        test_sents = sents[60:]
+        train_sents = sents[:60]
+        test_set = [(self.extract_features(t), s) for (t, s) in test_sents]
+        train_set = [(self.extract_features(t), s) for (t, s) in train_sents]
+        classifier = nltk.NaiveBayesClassifier.train(train_set)
+        print "NBC Accuracy: " + str(nltk.classify.accuracy(classifier, test_set))
+        tweet_set = [self.extract_features(t) for t in tweets]
+        sentiments = classifier.classify_many(tweet_set)
+        positive = 0
+        for sent in sentiments:
+            if sent == '1':
+                positive += 1
+        percent = (positive/float(len(sentiments)))*100
+        print "We estimate that %.2f percent of tweets are positive toward this issue." % percent
 
     def extract_features(self, tweet):
         """
+        defines features for tweets based on what words the tweets contain.
         """
-        features = {}
+        features = [('hasGood', ('good', 'satisfy', 'well', 'nice')),
+                    ('hasGreat', ('great', 'terrific', 'awesome', 'fantastic')),
+                    ('hasBad', ('bad', 'boo', 'poor', 'lame')),
+                    ('hasTerrible', ('terrible', 'awful', 'shameful', 'despicable')),
+                    ('hasLiar', ('lie', 'liar', 'untrustworthy', 'dishonest')),
+                    ('hasCriminal', ('criminal', 'crime', 'prison', 'lock')),
+                    ('hasCrooked', ('crooked', 'crook', 'corrupt')),
+                    ('hasRacist', ('racist', 'race')),
+                    ('hasDumb', ('dumb', 'stupid', 'idiot', 'fool', 'retard', 'moron')),
+                    ('hasBias', ('bias', 'interest', 'skewed', 'collude', 'collusion')),
+                    ('hasPussy', ('pussy', 'grab', 'pussy grabber', 'rape', 'rapist')),
+                    ('swears', ('fuck', 'fucking', 'fucker', 'shit', 'ass', 'bitch', 'bastard', 'dick')),
+                    ('hasDevil', ('devil', 'demonic', 'satan', 'satanic', 'demon')),
+                    ('hasMis', ('mistake', 'misguided', 'mislead', 'misunderstood', 'misunderstands')),
+                    ('hasChina', ('china', 'chinese')),
+                    ('hasMiddleEast', ('middle', 'syria', 'aleppo', 'saudi', 'arabia', 'iran', 'iraq', 'afghanistan')),
+                    ('hasLike', ('like', 'love', 'admire')),
+                    ('hasThank', ('thank', 'thanks')),
+                    ('hasTrade', ('trade', 'trading', 'deals', 'nafta')),
+                    ('hasLol', ('lol', 'haha', 'hahaha', 'hahahaha', 'joke')),
+                    ('hasCant', ("can't", "don't", "won't")),
+                    ('hasFix', ('fix', 'fixed', 'fixing')),
+                    ('hasJobs', ('job', 'jobs')),
+                    ('hasWin', ('win', 'winning', 'winner')),
+                    ('hasLose', ('lose', 'losing', 'loser'))]
+        words = tweet.split()
+        tweet_feats = {}
+        for feature in features:
+            tweet_feats[feature[0]] = False
+            for word in words:
+                if word.lower() in feature[1]:
+                    tweet_feats[feature[0]] = True
+        return tweet_feats
