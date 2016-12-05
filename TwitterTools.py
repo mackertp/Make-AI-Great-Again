@@ -13,7 +13,11 @@ Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 10/27/16
 """
 
-candidate_twitters = {"TRUMP": "@realDonaldTrump", "CLINTON": "@HillaryClinton"}
+candidate_twitters = {"TRUMP": "@realDonaldTrump", "CLINTON": "@HillaryClinton", "CHAFEE": "@LincolnChafee", "WEBB":
+                      "@JimWebbUSA", "O'MALLEY": "@MartinOMalley", "SANDERS": "@BernieSanders", "PAUL": "@RandPaul",
+                      "CARSON": "@RealBenCarson", "RUBIO": "@marcorubio", "BUSH": "@JebBush", "CRUZ": "@tedcruz",
+                      "CHRISTIE": "@GovChristie", "WALKER": "@ScottWalker", "HUCKABEE": "@GovMikeHuckabee", "KASICH":
+                      "@JohnKasich"}
 
 CONSUMER_KEY = 'uxXFZ6Vl1Z0euLnYkbuupPsUY'
 CONSUMER_SECRET = 'UZXd2H97ekAzbkvUcbk1xu60aE6Ce3JTVU3s5NJh26wBrT9HWI'
@@ -27,25 +31,6 @@ api = tweepy.API(auth)
 
 
 def candidate_mentions(topic, candidate):
-    topic += '@%s' % candidate_twitters[candidate]
-    results = api.search(q=topic)
-    return results
-
-
-def candidate_account(topic, candidate):
-    topic = 'from:%s' % candidate_twitters[candidate][1:]
-    print(topic)
-    results = api.search(q=topic)
-    return results
-
-
-def opponent_mentions(topic, candidate):
-    topic += '@%s' % candidate
-    results = api.search(q=topic)
-    return results
-
-
-def opponent_account(topic, candidate):
-    topic += 'from:%s' % candidate_twitters[candidate][1:]
-    results = api.search(q=topic)
+    topic += '@%s-filter:retweets' % candidate_twitters[candidate]
+    results = api.search(q=topic, count=200)
     return results

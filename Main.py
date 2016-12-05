@@ -160,7 +160,7 @@ def twitter_menu(at, date):
     for name in at.get_participants():
         print("%d) %s" % (can_num, name))
         can_num += 1
-    select = raw_input(">> ")
+    select = raw_input("\n>> ")
     if select == "return":
         sub_menu(at, date)
     candidate = ""
@@ -192,24 +192,38 @@ def twitter_menu(at, date):
 
     select = raw_input(">> ")
 
-    all_tweets = []
     if select == "1":
         tweets = candidate_mentions(topic, candidate)
+        hashtags = []
         for tweet in tweets:
-            if tweet not in all_tweets:
-                all_tweets.append(tweet)
-        for tweet in all_tweets:
+            for word in tweet.text.split(" "):
+                try:
+                    if word[0] == "#" and word not in hashtags:
+                        hashtags.append(word)
+                except IndexError:
+                    continue
             print(tweet.text)
-            print("\n")
-            print(tweet.favorite_count)
-            print("\n\n")
 
     if select == "2":
-        tweets = candidate_account(topic, candidate)
+        can_num = 1
+        candidates = []
+        for name in at.get_participants():
+            if name != candidate:
+                candidates.append(name)
+                print("%d) %s" % (can_num, name))
+                can_num += 1
+        select = raw_input("\n>> ")
+        try:
+            candidate = candidates[int(select) - 1]
+        except (IndexError, ValueError):
+            print("No valid candidate selected")
+            twitter_menu(at, date)
+
+        tweets = candidate_mentions(topic, candidate)
         for tweet in tweets:
-            if tweet not in all_tweets:
-                all_tweets.append(tweet)
             print(tweet.text)
+
+
     twitter_menu(at, date)
 
 
