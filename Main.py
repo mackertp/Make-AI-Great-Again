@@ -182,16 +182,34 @@ def twitter_menu(at, date):
 
     try:
         topic = topics[int(select)-1]
-        tweets = candidate_search(topic, candidate, date)
-        hashtags = []
-        for tweet in tweets:
-            print(tweet.text)
-            print("\n\n")
 
     except (IndexError, ValueError):
         print("Invalid selection")
         twitter_menu(at, date)
 
+    print("How would you like to search Twitter?\n\n1) Mentions candidate\n2) Candidate's account\n3) Mentions "
+          "opponent\n4) Opponent's account")
+
+    select = raw_input(">> ")
+
+    all_tweets = []
+    if select == "1":
+        tweets = candidate_mentions(topic, candidate)
+        for tweet in tweets:
+            if tweet not in all_tweets:
+                all_tweets.append(tweet)
+        for tweet in all_tweets:
+            print(tweet.text)
+            print("\n")
+            print(tweet.favorite_count)
+            print("\n\n")
+
+    if select == "2":
+        tweets = candidate_account(topic, candidate)
+        for tweet in tweets:
+            if tweet not in all_tweets:
+                all_tweets.append(tweet)
+            print(tweet.text)
     twitter_menu(at, date)
 
 
