@@ -187,8 +187,7 @@ def twitter_menu(at, date):
         print("Invalid selection")
         twitter_menu(at, date)
 
-    print("How would you like to search Twitter?\n\n1) Mentions candidate\n2) Candidate's account\n3) Mentions "
-          "opponent\n4) Opponent's account")
+    print("How would you like to search Twitter?\n\n1) Mentions candidate\n2) Mentions opponent\n")
 
     select = raw_input(">> ")
 
@@ -207,6 +206,7 @@ def twitter_menu(at, date):
     if select == "2":
         can_num = 1
         candidates = []
+        print("\nSelect the candidate you wish to see on twitter!")
         for name in at.get_participants():
             if name != candidate:
                 candidates.append(name)
