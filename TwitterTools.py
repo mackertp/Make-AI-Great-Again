@@ -50,6 +50,8 @@ def get_top_five(tweets):
     for tweet in top_tweets:
         out += tweet.text
         out += "\n"
+    if len(tweets) == 0:
+        out += "Welp, looks like nobody cared about this :(\n"
 
     return out
 
