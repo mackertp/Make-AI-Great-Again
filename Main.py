@@ -193,9 +193,8 @@ def twitter_menu(at, date):
     if select == "1":
         tweets = candidate_mentions(topic, candidate)
         top_tweets = get_top_five(tweets)
-        hashtags = get_hashtags(tweets)
+        # print the percentage favorable and unfavorable here and also in select == "2"
         print(top_tweets)
-
 
     if select == "2":
         can_num = 1
