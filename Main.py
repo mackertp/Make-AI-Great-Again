@@ -28,7 +28,6 @@ def main_menu():
         if user_in == "help":
             print("\nhelp -- show options\nselect -- pick a debate to be analyzed\nquit -- quits program\n")
             main_menu()
-
         elif user_in == "select":
             info = select_debate()
             url = info[0]

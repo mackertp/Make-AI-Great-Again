@@ -1,4 +1,5 @@
 import nltk
+import random
 import re
 from cStringIO import StringIO
 import sys
@@ -271,3 +272,22 @@ class AnalysisTools:
                     if current_speaker in wd:
                         wd[current_speaker].append(word)
         return [sd, wd, rd]
+
+    def bayes_classify(self):
+        """
+        """
+        with open('sentiments.txt', 'r') as fh:
+            text = fh.readlines()
+        sents = []
+        for line in text:
+            lines = line.split('\t')
+            sents.append((lines[1], lines[0]))
+        random.shuffle(sents)
+        test_sents = sents[:1000]
+        devtest_sents = sents[1000:3000]
+        train_sents = sents[3000:]
+
+    def extract_features(self, tweet):
+        """
+        """
+        features = {}
