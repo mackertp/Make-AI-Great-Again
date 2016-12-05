@@ -61,8 +61,8 @@ def sub_menu(at, date):
     if user_in == "help":
         print("\n1) print participants\n2) print moderators\n3) print total number of words by candidates\n4) "
               "print out number of words for each candidate\n5) print number of words for specific candidate\n6) print"
-              "out concordance for a word and candidate\n'help' -- prints out all commands\n'return' -- sends back to "
-              "main menu\n'quit' -- quits the program")
+              "out concordance for a word and candidate\n7) goes to twitter tools submenu\n'help' -- prints out all "
+              "commands\n'return' -- sends back to main menu\n'quit' -- quits the program")
         sub_menu(at, date)
 
     elif user_in == "return":
@@ -193,15 +193,10 @@ def twitter_menu(at, date):
 
     if select == "1":
         tweets = candidate_mentions(topic, candidate)
-        hashtags = []
-        for tweet in tweets:
-            for word in tweet.text.split(" "):
-                try:
-                    if word[0] == "#" and word not in hashtags:
-                        hashtags.append(word)
-                except IndexError:
-                    continue
-            print(tweet.text)
+        top_tweets = get_top_five(tweets)
+        hashtags = get_hashtags(tweets)
+        print(top_tweets)
+
 
     if select == "2":
         can_num = 1
@@ -220,9 +215,9 @@ def twitter_menu(at, date):
             twitter_menu(at, date)
 
         tweets = candidate_mentions(topic, candidate)
-        for tweet in tweets:
-            print(tweet.text)
+        top_tweets = get_top_five(tweets)
 
+        print(top_tweets)
 
     twitter_menu(at, date)
 
