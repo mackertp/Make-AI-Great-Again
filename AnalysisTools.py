@@ -298,7 +298,10 @@ class AnalysisTools:
         for sent in sentiments:
             if sent == '1':
                 positive += 1
-        percent = (positive/float(len(sentiments)))*100
+        try:
+            percent = (positive/float(len(sentiments)))*100
+        except ZeroDivisionError:
+            percent = 0
         print "We estimate that %.2f percent of tweets are positive toward this issue." % percent
 
     def extract_features(self, tweet):

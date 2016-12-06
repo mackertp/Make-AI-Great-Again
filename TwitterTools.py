@@ -39,7 +39,7 @@ def candidate_mentions(topic, candidate):
 def get_top_five(tweets):
     top_tweets = []
     for tweet in tweets:
-        if top_tweets.__len__() < 6:
+        if top_tweets.__len__() < 5:
             top_tweets.append(tweet)
         else:
             for item in top_tweets:
@@ -47,9 +47,12 @@ def get_top_five(tweets):
                     top_tweets[top_tweets.index(item)] = tweet
 
     out = "\nhere are the five most popular tweets:\n\n"
+    tweet_num = 1
     for tweet in top_tweets:
+        out += "%d) " % tweet_num
         out += tweet.text
         out += "\n"
+        tweet_num += 1
     if len(tweets) == 0:
         out += "Welp, looks like nobody cared about this :(\n"
 
