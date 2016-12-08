@@ -286,8 +286,8 @@ class AnalysisTools:
             lines = line.split('   ')
             sents.append((lines[1], lines[0]))
         random.shuffle(sents)
-        test_sents = sents[60:]
-        train_sents = sents[:60]
+        test_sents = sents[80:]
+        train_sents = sents[:80]
         test_set = [(self.extract_features(t), s) for (t, s) in test_sents]
         train_set = [(self.extract_features(t), s) for (t, s) in train_sents]
         classifier = nltk.NaiveBayesClassifier.train(train_set)
