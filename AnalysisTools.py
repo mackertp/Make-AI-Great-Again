@@ -124,52 +124,6 @@ class AnalysisTools:
         """
         return self.moderators
 
-    def make_concordance(self, candidate, topic):
-        """
-        iterate over self.text, searching for the word or a list of words in onder.
-        if found, backtrack until you find the start of the sentence, record index,
-        look ahead until you find period, join into a string and save in list.
-        *** NOT WORKING RIGHT NOW, JUST USING NLTK.TEXT.CONCORDANCE() ***
-        """
-        my_text = self.text_dict[candidate]
-        print my_text
-        results = []
-        topic_list = topic.split()
-        multi_word = True
-        if len(topic_list) == 1:
-            multi_word = False
-        for i in range(len(my_text)):
-            if my_text[i].lower() == topic_list[0].lower():
-                match = True
-                if multi_word:
-                    j = 1
-                    while j < len(topic_list):
-                        if my_text[i+j].lower() != topic_list[j].lower():
-                            match = False
-                if not match:
-                    continue
-                start = i
-                end = i+1
-                while my_text[start] != '.':
-                    start -= 1
-                while my_text[end] != '.':
-                    end += 1
-                start += 1
-                end += 1
-                sent_list = my_text[start:end]
-                """
-                tuple_list = my_text[start:end]
-                sent_list = []
-                for tup in tuple_list:
-                    sent_list.append(tup[0])
-                """
-                sent = ' '.join(sent_list)
-                results.append(sent)
-        answer = ''
-        for result in results:
-            answer += '%s\n' % result
-        return answer
-
     def get_people(self):
         """
         iterates over self.text, populating a list of people, using a regular expression to
