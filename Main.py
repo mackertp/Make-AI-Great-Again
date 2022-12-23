@@ -1,11 +1,3 @@
-from __future__ import print_function
-import sys
-import nltk
-from urllib import urlopen
-from bs4 import BeautifulSoup
-from AnalysisTools import AnalysisTools
-from TwitterTools import *
-
 """
 Debate analyzer project ("Make AI Great Again")
 Main class
@@ -15,13 +7,29 @@ Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 10/26/16
 """
 
+# ------------------------------------------- #
+# imports
+# ------------------------------------------- #
+
+from __future__ import print_function
+import sys
+import nltk
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+from support_functions.analysis_tools import AnalysisTools
+from support_functions.twitter_tools import *
+
+
+# ------------------------------------------- #
+# start CLI application
+# ------------------------------------------- #
 
 def main_menu():
     """
     Main menu for the program. Forces you to select a debate for analysis
     """
     print("Type 'select' to pick a debate for analysis, 'help' shows all commands, 'quit' will exit the program")
-    user_in = raw_input(">> ")
+    user_in = input(">> ")
     quit_prog = False
 
     while not quit_prog:
@@ -55,7 +63,7 @@ def sub_menu(at, date):
     Sub menu, once a debate is selected this menu provides the options for analyzing the text
     """
     print("\nType a command, 'help' shows all valid commands, 'return' sends back to main menu")
-    user_in = raw_input(">> ")
+    user_in = input(">> ")
 
     if user_in == "help":
         print("\n1) print participants\n2) print moderators\n3) print total number of words by candidates\n4) "
@@ -105,7 +113,7 @@ def sub_menu(at, date):
         for name in at.get_participants():
             print("%d) %s" % (can_num, name))
             can_num += 1
-        select = raw_input(">> ")
+        select = input(">> ")
         candidate = ""
         try:
             candidate = at.get_participants()[int(select)-1]
@@ -122,7 +130,7 @@ def sub_menu(at, date):
         for name in at.get_participants():
             print("%d) %s" % (can_num, name))
             can_num += 1
-        select = raw_input(">> ")
+        select = input(">> ")
         candidate = ""
         try:
             candidate = at.get_participants()[int(select) - 1]
@@ -130,7 +138,7 @@ def sub_menu(at, date):
             print("No valid candidate selected")
             sub_menu(at, date)
         print("\nSelect a word to look for")
-        word = raw_input(">> ")
+        word = input(">> ")
         at.get_concordance(candidate, word)
         # print(at.make_concordance(candidate, word))  # * for testing our own concordance function *
         sub_menu(at, date)
@@ -159,7 +167,7 @@ def twitter_menu(at, date):
     for name in at.get_participants():
         print("%d) %s" % (can_num, name))
         can_num += 1
-    select = raw_input("\n>> ")
+    select = input("\n>> ")
     if select == "return":
         sub_menu(at, date)
     candidate = ""
@@ -177,7 +185,7 @@ def twitter_menu(at, date):
         print("%d) %s" % (topic_num, topic))
         topic_num += 1
 
-    select = raw_input("\n>> ")
+    select = input("\n>> ")
 
     try:
         topic = topics[int(select)-1]
@@ -188,7 +196,7 @@ def twitter_menu(at, date):
 
     print("How would you like to search Twitter?\n\n1) Mentions candidate\n2) Mentions opponent\n")
 
-    select = raw_input(">> ")
+    select = input(">> ")
 
     if select == "1":
         tweets = candidate_mentions(topic, candidate)
@@ -208,7 +216,7 @@ def twitter_menu(at, date):
                 candidates.append(name)
                 print("%d) %s" % (can_num, name))
                 can_num += 1
-        select = raw_input("\n>> ")
+        select = input("\n>> ")
         try:
             candidate = candidates[int(select) - 1]
         except (IndexError, ValueError):
@@ -233,14 +241,14 @@ def select_debate():
     print("\nSelect a debate from 2016:\n1) Democratic Primary\n2) Republican Primary\n3) VP Debate\n4)"
           " General Election\n")    # 5) add your own!\n
     url = ""
-    user_in = raw_input(">> ")
+    user_in = input(">> ")
     date = ""
     if user_in == "1":
         # select form democratic primary debates
         print("\nSelect one of the debates:\n1) Las Vegas 10-13-15\n2) Des Moines 11-14-15\n3) Manchester 12-19-15\n"
               "4) Charleston 1-17-16\n5) Durham 2-4-16\n6) Milwaukee 2-11-16\n7) Flint 3-6-16\n8) Miami 3-9-16\n"
               "9) Brooklyn 4-14-16\n")
-        select = raw_input(">> ")
+        select = input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110903"
             date = "2015-10-13"
@@ -277,7 +285,7 @@ def select_debate():
         print("\nSelect one of the debates:\n1) Cleveland 8-6-15\n2) Simi Valley 9-16-15\n3) Boulder 10-28-15\n4) "
               "Milwaukee 11-10-15\n5) Las Vegas 12-15-15\n6) North Charleston 1-14-16\n7) Des Moines 1-28-16\n8) "
               "Manchester 2-6-16\n9) Greenville 2-13-16\n10) Houston 2-25-16\n11) Detroit 3-3-16\n12) Miami 3-10-16\n")
-        select = raw_input(">> ")
+        select = input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=110489"
             date = "2015-08-06"
@@ -327,7 +335,7 @@ def select_debate():
         # debates from the general election will be options
         print("\nSelect one of the debates:\n1) Hofstra 9-26-16\n2) Washington University 10-9-16\n3) University Nevada"
               " 10-19-16\n")
-        select = raw_input(">> ")
+        select = input(">> ")
         if select == "1":
             url = "http://www.presidency.ucsb.edu/ws/index.php?pid=118971"
             date = "2016-09-26"

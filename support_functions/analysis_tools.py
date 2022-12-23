@@ -1,9 +1,3 @@
-import nltk
-import random
-import re
-from cStringIO import StringIO
-import sys
-
 """
 Debate analyzer project ("Make AI Great Again")
 AnalysisTools class
@@ -13,6 +7,20 @@ Dylan Telford, Preston Mackert, Alexis Grebenok, Jerry Daigler
 10/26/16
 """
 
+# ------------------------------------------- #
+# imports
+# ------------------------------------------- #
+
+import nltk
+import random
+import re
+from io import StringIO
+import sys
+
+
+# ------------------------------------------- #
+# support class
+# ------------------------------------------- #
 
 class Capturing(list):
     """
@@ -31,6 +39,10 @@ class Capturing(list):
         del self._stringio
         sys.stdout = self._stdout
 
+
+# ------------------------------------------- #
+# Class to be called by CLI application
+# ------------------------------------------- #
 
 class AnalysisTools:
     """ Take in a nltk.Text object and run analysis methods on it """
@@ -52,6 +64,7 @@ class AnalysisTools:
         for part in self.participants:
             self.text_dict[part] = nltk.Text(self.word_dict[part])
 
+
     def candidate_topics(self, candidate):
         """
         returns a list of topics for the candidates
@@ -65,7 +78,7 @@ class AnalysisTools:
         all_colls = all_colls[1:]
         topics = all_colls.split("; ")
 
-        with open("dontInclude.txt") as fh:
+        with open("support_functions/text_files/dontInclude.txt") as fh:
             dont_include = fh.read().splitlines()
 
         for topic in topics:
@@ -73,6 +86,7 @@ class AnalysisTools:
                 topics.remove(topic)
 
         return topics
+
 
     def total_words(self):
         """
@@ -82,6 +96,7 @@ class AnalysisTools:
         for part in self.participants:
             total += len(self.word_dict[part])  # sum up word_dict
         return total
+
 
     def words_by_candidate(self, candidate):
         """
@@ -94,6 +109,7 @@ class AnalysisTools:
         return '%s spoke %d words (%s of the total words spoken by the candidates)' % (candidate, candidate_total,
                                                                                        percent)
 
+
     def words_by_all_candidates(self):
         """
         returns a multi-line string with as many lines as candidates, where each
@@ -104,6 +120,7 @@ class AnalysisTools:
             answer += self.words_by_candidate(part) + '\n'
         return answer
 
+
     def get_concordance(self, candidate, topic):
         """
         given a candidate's last name and a one-word topic, this returns an nltk.Text
@@ -112,17 +129,20 @@ class AnalysisTools:
         my_text = self.text_dict[candidate.upper()]
         return my_text.concordance(topic, width=200, lines=100)
 
+
     def get_participants(self):
         """
         returns a list of participants' last names in all caps
         """
         return self.participants
 
+
     def get_moderators(self):
         """
         returns a list of moderators' last names in all caps
         """
         return self.moderators
+
 
     def get_people(self):
         """
@@ -171,6 +191,7 @@ class AnalysisTools:
             elif name in mod_string.split():
                 mods.append(name.upper())
         return parts, mods
+
 
     def parse_text(self):
         """
@@ -227,13 +248,14 @@ class AnalysisTools:
                         wd[current_speaker].append(word)
         return [sd, wd, rd]
 
+
     def bayes_classify(self, tweets):
         """
         create a Naive Bayes Classifier, trained on the sampleTweets.txt file which
         contains a 1 or 0 (positive or negative) on each line, along with a tweet.
         Use classifier to figure out percentage of positive tweets sent as argument.
         """
-        with open('sampleTweets.txt', 'r') as fh:
+        with open('support_functions/text_files/sampleTweets.txt', 'r') as fh:
             text = fh.readlines()
         sents = []
         for line in text:
@@ -245,7 +267,7 @@ class AnalysisTools:
         test_set = [(self.extract_features(t), s) for (t, s) in test_sents]
         train_set = [(self.extract_features(t), s) for (t, s) in train_sents]
         classifier = nltk.NaiveBayesClassifier.train(train_set)
-        print "NBC Accuracy: " + str(nltk.classify.accuracy(classifier, test_set))
+        print("NBC Accuracy: " + str(nltk.classify.accuracy(classifier, test_set)))
         tweet_set = [self.extract_features(t) for t in tweets]
         sentiments = classifier.classify_many(tweet_set)
         positive = 0
@@ -256,7 +278,8 @@ class AnalysisTools:
             percent = (positive/float(len(sentiments)))*100
         except ZeroDivisionError:
             percent = 0
-        print "We estimate that %.2f percent of tweets are positive toward this issue." % percent
+        print("We estimate that %.2f percent of tweets are positive toward this issue." % percent)
+
 
     def extract_features(self, tweet):
         """

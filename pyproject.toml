@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "make-ai-great-again"
+version = "0.1.0"
+description = "a simple debate analyzer, showing off some neat python packages"
+authors = ["mackertp <mackertp@my.canisius.edu>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+nltk = "^3.8"
+beautifulsoup4 = "^4.11.1"
+tweepy = "^4.12.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

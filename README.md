@@ -1,4 +1,5 @@
-# DebateAnalyzer
+# Debate Analyzer
+
 Program for analyzing the debates throughout the presidential election
 
 Menu system used to select a debate. All of the 2016 election debates
