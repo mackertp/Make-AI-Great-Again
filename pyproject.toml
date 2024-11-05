@@ -6,12 +6,17 @@ authors = ["mackertp <mackertp@my.canisius.edu>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.12"
 nltk = "^3.8"
 beautifulsoup4 = "^4.11.1"
 tweepy = "^4.12.1"
 jupyterlab = "^4.2.3"
 vadersentiment = "^3.3.2"
+transformers = "^4.46.1"
+scipy = "^1.14.1"
+torch = "^2.5.1"
+torchvision = "^0.20.1"
+ipywidgets = "^8.1.5"
 
 [tool.poetry.dev-dependencies]
 

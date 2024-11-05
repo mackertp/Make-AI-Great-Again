@@ -4,3 +4,5 @@ support_functions/__pycache__
 
 config.py
 *.ipynb_checkpoints
+.DS_Store
+/debates/settings/cache/
