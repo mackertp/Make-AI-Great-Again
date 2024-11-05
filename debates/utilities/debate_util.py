@@ -13,6 +13,8 @@ findings.
 # libraries
 # ---------------------------------------------------------------- #
 
+import os
+os.environ['HF_HOME'] = os.getcwd() + '/settings/cache/'
 import sys
 import re
 import nltk
@@ -21,6 +23,9 @@ from io import StringIO
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification
+from scipy.special import softmax
 
 # ---------------------------------------------------------------- #
 # clean html
@@ -111,7 +116,7 @@ class AnalysisTools:
         all_colls = all_colls[1:]
         topics = all_colls.split("; ")
 
-        with open("support_functions/text_files/dontInclude.txt") as fh:
+        with open("utilities/text_files/dontInclude.txt") as fh:
             dont_include = fh.read().splitlines()
 
         for topic in topics:
@@ -330,34 +335,10 @@ class AnalysisTools:
 
 
     def extract_features(self, tweet):
+        return tweet
         """
         defines features for tweets based on what words the tweets contain.
-        """
-        features = [('hasGood', ('good', 'satisfy', 'well', 'nice')),
-                    ('hasGreat', ('great', 'terrific', 'awesome', 'fantastic')),
-                    ('hasBad', ('bad', 'boo', 'poor', 'lame')),
-                    ('hasTerrible', ('terrible', 'awful', 'shameful', 'despicable')),
-                    ('hasLiar', ('lie', 'liar', 'untrustworthy', 'dishonest')),
-                    ('hasCriminal', ('criminal', 'crime', 'prison', 'lock')),
-                    ('hasCrooked', ('crooked', 'crook', 'corrupt')),
-                    ('hasRacist', ('racist', 'race')),
-                    ('hasDumb', ('dumb', 'stupid', 'idiot', 'fool', 'retard', 'moron')),
-                    ('hasBias', ('bias', 'interest', 'skewed', 'collude', 'collusion')),
-                    ('hasPussy', ('pussy', 'grab', 'pussy grabber', 'rape', 'rapist')),
-                    ('swears', ('fuck', 'fucking', 'fucker', 'shit', 'ass', 'bitch', 'bastard', 'dick')),
-                    ('hasDevil', ('devil', 'demonic', 'satan', 'satanic', 'demon')),
-                    ('hasMis', ('mistake', 'misguided', 'mislead', 'misunderstood', 'misunderstands')),
-                    ('hasChina', ('china', 'chinese')),
-                    ('hasMiddleEast', ('middle', 'syria', 'aleppo', 'saudi', 'arabia', 'iran', 'iraq', 'afghanistan')),
-                    ('hasLike', ('like', 'love', 'admire')),
-                    ('hasThank', ('thank', 'thanks')),
-                    ('hasTrade', ('trade', 'trading', 'deals', 'nafta')),
-                    ('hasLol', ('lol', 'haha', 'hahaha', 'hahahaha', 'joke')),
-                    ('hasCant', ("can't", "don't", "won't")),
-                    ('hasFix', ('fix', 'fixed', 'fixing')),
-                    ('hasJobs', ('job', 'jobs')),
-                    ('hasWin', ('win', 'winning', 'winner')),
-                    ('hasLose', ('lose', 'losing', 'loser'))]
+        # features = this list is propriatary 🕵🏻 🔐 []
         words = tweet.split()
         tweet_feats = {}
         for feature in features:
@@ -366,7 +347,7 @@ class AnalysisTools:
                 if word.lower() in feature[1]:
                     tweet_feats[feature[0]] = True
         return tweet_feats
-
+        """
     def analyze_topic_sentiment(self, candidate, concordance_list):
         """
         analyzes the sentiment of a given candidate's topic concordance.
@@ -397,5 +378,49 @@ class AnalysisTools:
             else :
                 analytics[comment]['overall'] = 'Neutral'
         return analytics
+
+
+    def score_sentiments(self, concordance_list):
+        """
+        returns: a dictionary of scored sentiments for a given list of comments
+        @param: concordance_list - a concordance list from the get_concordance_list support function
+        """
+        MODEL = f'cardiffnlp/twitter-roberta-base-sentiment'
+        tokenizer = AutoTokenizer.from_pretrained(MODEL)
+        model = AutoModelForSequenceClassification.from_pretrained(MODEL)
+        sentiments = {'Negative': 0, 'Neutral': 0, 'Positive': 0}
+        avg_sent = {'Negative': 0, 'Neutral': 0, 'Positive': 0}
+        sorted_comments = {'Negative': [], 'Neutral': [], 'Positive': []}
+        # clean the concordance list items into a python list with relevant data
+        analysis = []
+        for segment in concordance_list:
+            analysis.append(list(segment)[0] + list(segment)[2])
+        for comment in analysis:
+            comment = ' '.join(word for word in comment)
+            encoded_text = tokenizer(comment, return_tensors='pt')
+            output = model(**encoded_text, output_hidden_states=True)
+            scores = output[0][0].detach().numpy()
+            scores = softmax(scores)
+            sentiment = {
+                'Negative': scores[0],
+                'Neutral': scores[1],
+                'Positive': scores[2]
+            }
+            avg_sent['Negative'] += sentiment['Negative']
+            avg_sent['Neutral'] += sentiment['Neutral']
+            avg_sent['Positive'] += sentiment['Positive']
+            if sentiment['Positive'] - sentiment['Negative'] > 0:
+                sentiments['Positive'] += 1
+                sorted_comments['Positive'].append(comment)
+            elif sentiment['Positive'] - sentiment['Negative'] < 0:
+                sentiments['Negative'] += 1
+                sorted_comments['Negative'].append(comment)
+            else:
+                sentiments['Neutral'] += 1
+                sorted_comments['Neutral'].append(comment)
+        avg_sent['Negative'] = (avg_sent['Negative'] / len(analysis)).item()
+        avg_sent['Neutral'] = (avg_sent['Neutral'] / len(analysis)).item()
+        avg_sent['Positive'] = (avg_sent['Positive'] / len(analysis)).item()
+        return (avg_sent, sentiments, sorted_comments)
 
     
