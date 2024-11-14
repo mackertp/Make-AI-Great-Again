@@ -1,10 +1,6 @@
 """
-This utility file provides funcitons that are consumed by the 
-notebooks to abstract complexity away from the visuals and text.
-
-Introduced Vader, but look to continue training - look at some 
-additioal value in plotting and graphing some of the more interesting
-findings.
+This utility file provides classes and functions that are extended  
+into Jupyter Notebooks.
 
 @author Preston Mackert
 """
@@ -13,16 +9,20 @@ findings.
 # libraries
 # ---------------------------------------------------------------- #
 
+# system config and core packages
 import os
 os.environ['HF_HOME'] = os.getcwd() + '/settings/cache/'
 import sys
 import re
 import nltk
 import random
+# web utilities
 from io import StringIO
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+# bag of words approach
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+# neural network approach
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 from scipy.special import softmax
@@ -33,8 +33,10 @@ from scipy.special import softmax
 
 def clean_and_tag(url):
     """ 
-    params: url
-    return: text object with tagged_tokens 
+    params: 
+        - url: source web address for debate text
+    returns: 
+        - a nltk text object with tagged_tokens 
     """
     raw = urlopen(url).read()
     soup = BeautifulSoup(raw, 'html.parser')
@@ -45,11 +47,12 @@ def clean_and_tag(url):
     tagged_tokens = nltk.pos_tag(tokens)
     return nltk.Text(tagged_tokens)
 
-
 def trim_tokens(tokens):
     """
-    params: tokens
-    return: cleaned token list 
+    params: 
+        - tokens: takes in text tokenized by nltk
+    returns: 
+        - cleaned token list 
     """
     start = 0
     end = len(tokens)-1
@@ -61,7 +64,6 @@ def trim_tokens(tokens):
             break
     return tokens[start:end]
 
-
 # ---------------------------------------------------------------- #
 # support classes
 # ---------------------------------------------------------------- #
@@ -70,8 +72,10 @@ class Capturing(list):
     """
     Used as a support class for the get_topics method of the debate text.
     Ref: http://stackoverflow.com/questions/16571150/how-to-capture-stdout-output-from-a-python-function-call
-    params: list
-    return: cleaned list
+    params: 
+        - list
+    returns: 
+        - cleaned list
     """
     def __enter__(self):
         self._stdout = sys.stdout
@@ -87,9 +91,13 @@ class Capturing(list):
 class AnalysisTools:
     def __init__(self, text):
         """
-        Instantiate data structures that will be populated by methods. Pre-populates the participants and 
-        moderators based on the url. Using an assertion, the nltk.Text object is passed into the parse_text 
-        method to populate initial word dictionaries for analysis.
+        Instantiates data structures for a custom class. Pre-populates the participants and 
+        moderators based an assumed debate url. 
+        params:
+            - text: a nltk.Text object
+        returns:
+            - prepopulated participant list
+            - text data structures for support functions
         """
         assert isinstance(text, nltk.Text)
         self.text = text
@@ -102,10 +110,12 @@ class AnalysisTools:
         for part in self.participants:
             self.text_dict[part] = nltk.Text(self.word_dict[part])
 
-
     def candidate_topics(self, candidate):
         """
-        returns a list of topics for the candidates
+        params:
+            - candidate: a string indicating the candidate you want to analyze
+        returns:
+            - a list of topics for the specified candidate
         """
         txt = nltk.Text(self.word_dict[candidate])
         with Capturing() as collocations:
@@ -115,85 +125,86 @@ class AnalysisTools:
             all_colls += " " + item
         all_colls = all_colls[1:]
         topics = all_colls.split("; ")
-
-        with open("utilities/text_files/dontInclude.txt") as fh:
+        with open("settings/text_files/dontInclude.txt") as fh:
             dont_include = fh.read().splitlines()
-
         for topic in topics:
             if topic in dont_include:
                 topics.remove(topic)
-
         return topics
-
 
     def total_words(self):
         """
-        returns the total number of words spoken by the group of candidates
+        returns:
+            - the total number of words spoken by each candidate
         """
         total = 0
         for part in self.participants:
             total += len(self.word_dict[part])  # sum up word_dict
         return total
 
-
     def words_by_candidate(self, candidate, analytics):
         """
-        returns a string describing how many words (and what percent of the total)
-        a given candidate spoke
+        params:
+            - candidate: a string indicating the selected candidate
+            - analytics: a dictionary that stores analytics for candidates (key = candidate string)
+        returns:
+            - an updated analytics dictionary with the selected candidate's statistics
         """
         candidate_total = len(self.word_dict[candidate])
         total = self.total_words()
         percent = '%.2f%%' % ((candidate_total / float(total))*100)
         analytics[candidate] = (candidate_total, percent)
         return analytics
-        
-
 
     def words_by_all_candidates(self):
         """
-        returns a multi-line string with as many lines as candidates, where each
-        line is the result of a call to words_by_candidates() with a candidate
+        returns: 
+            - a dictionary of candidate analytics
         """
         analytics = {}
         for part in self.participants:
             analytics = self.words_by_candidate(part, analytics)
         return analytics
 
-
     def get_concordance(self, candidate, topic):
         """
-        given a candidate's last name and a one-word topic, this returns an nltk.Text
-        concordance for that word from the Text object corresponding to that candidate
+        params: 
+            - candidate: a string indicating the selected candidate
+            - topic: a string to search for within a candidate's section of text
+        returns: 
+            - an nltk.Text concordance for the topic string from the selected candidate
         """
         my_text = self.text_dict[candidate.upper()]
         return my_text.concordance(topic, width=200, lines=100)
 
     def get_concordance_list(self, candidate, topic):
         """
-        given a candidate's last name and a one-word topic, this returns an nltk.Text
-        concordance in list format
+        params:
+            - candidate: a string indicating the selected candidate
+            - topic: a string to search for within a candidate's section of text
+        returns:
+            - an nltk.Text concordance in python's built-in list format
         """
         my_text = self.text_dict[candidate.upper()]
         return my_text.concordance_list(topic, width=200, lines=100)
 
-
     def get_participants(self):
         """
-        returns a list of participants' last names in all caps
+        returns:
+            - a list of participants' last names in all caps
         """
         return self.participants
 
-
     def get_moderators(self):
         """
-        returns a list of moderators' last names in all caps
+        returns:
+            - a list of moderators' last names in all caps
         """
         return self.moderators
 
-
     def get_people(self):
         """
-        Iterates over self.text, populating a list of people, using a regular expression to
+        A support funciton that iterates over self.text, populating a list of people, using a regular expression to
         pick out words in all caps followed by a colon. Account for exceptions that should not be
         included (like CNN, PARTICIPANTS, etc.). Extract the sentences introducing the
         participants and moderators, and compare the list of people to these to compile and return
@@ -245,14 +256,13 @@ class AnalysisTools:
         # return both participants and moderators
         return parts, mods
 
-
     def parse_text(self):
         """
-        create the speak, word, and reaction dictionaries using self.candidates and self.moderators.
-        Iterate through self.text with a state machine, keeping track of the current
-        speaker. Add each word said to the speaker's wd value (list), while incrementing the appropriate
-        value (int) in sd every time the speaker changes. Keep track of reactions (in between []) in rd.
-        return the three dictionaries in a list
+        A support function that creates the speak, word, and reaction dictionaries using self.candidates and self.moderators.
+        Iterates through self.text keeping track of the current speaker. Adds each word said to the speaker's "wd" value (list), while
+        incrementing the appropriate value (int) in "sd" every time the speaker changes. Keep track of reactions (in between []) in "rd".
+        returns 
+            - sd, wd, rd: dictionaries to support key analytics functions
         """
         sd = {}  # speak dictionary maps speaker (string) to # of times speaking (int)
         wd = {}  # word dictionary maps speaker (string) to list of words said ([strings])
@@ -301,58 +311,16 @@ class AnalysisTools:
                         wd[current_speaker].append(word)
         return [sd, wd, rd]
 
-
-    def bayes_classify(self, tweets):
-        """
-        create a Naive Bayes Classifier, trained on the sampleTweets.txt file which
-        contains a 1 or 0 (positive or negative) on each line, along with a tweet.
-        Use classifier to figure out percentage of positive tweets sent as argument.
-        """
-        with open('support_functions/text_files/sampleTweets.txt', 'r') as fh:
-            text = fh.readlines()
-        sents = []
-        for line in text:
-            lines = line.split('   ')
-            sents.append((lines[1], lines[0]))
-        random.shuffle(sents)
-        test_sents = sents[80:]
-        train_sents = sents[:80]
-        test_set = [(self.extract_features(t), s) for (t, s) in test_sents]
-        train_set = [(self.extract_features(t), s) for (t, s) in train_sents]
-        classifier = nltk.NaiveBayesClassifier.train(train_set)
-        print("NBC Accuracy: " + str(nltk.classify.accuracy(classifier, test_set)))
-        tweet_set = [self.extract_features(t) for t in tweets]
-        sentiments = classifier.classify_many(tweet_set)
-        positive = 0
-        for sent in sentiments:
-            if sent == '1':
-                positive += 1
-        try:
-            percent = (positive/float(len(sentiments)))*100
-        except ZeroDivisionError:
-            percent = 0
-        print("We estimate that %.2f percent of tweets are positive toward this issue." % percent)
-
-
-    def extract_features(self, tweet):
-        return tweet
-        """
-        defines features for tweets based on what words the tweets contain.
-        # features = this list is propriatary 🕵🏻 🔐 []
-        words = tweet.split()
-        tweet_feats = {}
-        for feature in features:
-            tweet_feats[feature[0]] = False
-            for word in words:
-                if word.lower() in feature[1]:
-                    tweet_feats[feature[0]] = True
-        return tweet_feats
-        """
     def analyze_topic_sentiment(self, candidate, concordance_list):
         """
-        analyzes the sentiment of a given candidate's topic concordance.
-        params: candidate name, topic concordance list
-        return: analytics dictionary
+        Analyzes the sentiment of a given candidate's topic concordance list using a "bag of words" 
+        approach with nltk's built-in vader sentiment.
+        params: 
+            - candidate name
+            - topic 
+            - concordance_list
+        returns: 
+            - a dictionary of scored sentiments
         """
         # instantiate vader and the return analytics dict
         sia = SentimentIntensityAnalyzer()
@@ -379,11 +347,14 @@ class AnalysisTools:
                 analytics[comment]['overall'] = 'Neutral'
         return analytics
 
-
     def score_sentiments(self, concordance_list):
         """
-        returns: a dictionary of scored sentiments for a given list of comments
-        @param: concordance_list - a concordance list from the get_concordance_list support function
+        Function that scores sentiment using a neural network approach. Hugging Face
+        transformers is utilized with pytorch.
+        params:
+            - concordance_list: a python list generated from get_concordance_list
+        returns: 
+            - a dictionary of scored sentiments for a given list of comments
         """
         MODEL = f'cardiffnlp/twitter-roberta-base-sentiment'
         tokenizer = AutoTokenizer.from_pretrained(MODEL)
@@ -422,5 +393,109 @@ class AnalysisTools:
         avg_sent['Neutral'] = (avg_sent['Neutral'] / len(analysis)).item()
         avg_sent['Positive'] = (avg_sent['Positive'] / len(analysis)).item()
         return (avg_sent, sentiments, sorted_comments)
+        
 
+class TwitterTools:
+    """
+    # TODO: Review API config and utiliization in a notebook for 2028.
+    """
+    def __init__(self, auth, api):
+        """
+        encapsulate use of the tweepy API.
+        """
+        # ---------------------------------------------------------------- #
+        # rest api config
+        # ---------------------------------------------------------------- #
+        
+        # TODO: create updated .env file and configure in notebook
+        # auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)
+        # auth.set_access_token(config.ACCESS_TOKEN, config.ACCESS_TOKEN_SECRET)
+        # self.api = tweepy.API(auth)
+        self.candidate_twitters = {
+            "TRUMP": "@realDonaldTrump", 
+            "BIDEN": "@JoeBiden", 
+            "HARRIS": "@KamalaHarris"
+        }
+
+    def extract_features(self, tweet):
+        """
+        # features = this list is proprietary 🕵🏻 🔐 []
+        words = tweet.split()
+        tweet_feats = {}
+        for feature in features:
+            tweet_feats[feature[0]] = False
+            for word in words:
+                if word.lower() in feature[1]:
+                    tweet_feats[feature[0]] = True
+        return tweet_feats
+        """
+        return tweet
+        
+    def candidate_mentions(self, topic, candidate):
+        topic += '@%s-filter:retweets' % candidate_twitters[candidate]
+        # tweepy deprecated the ability to search all tweets since we made this project
+        results = api.search_recent_tweets(q=topic, count=200)
+        return results
+
+    def get_top_five(self, tweets):
+        top_tweets = []
+        for tweet in tweets:
+            if top_tweets.__len__() < 5:
+                top_tweets.append(tweet)
+            else:
+                for item in top_tweets:
+                    if tweet.favorite_count > item.favorite_count and tweet not in top_tweets:
+                        top_tweets[top_tweets.index(item)] = tweet
+        out = "\nhere are the five most popular tweets:\n\n"
+        tweet_num = 1
+        for tweet in top_tweets:
+            out += "%d) " % tweet_num
+            out += tweet.text
+            out += "\n"
+            tweet_num += 1
+        if len(tweets) == 0:
+            out += "Welp, looks like nobody cared about this :(\n"
+        return out
     
+    def get_hashtags(self, tweets):
+        hashtags = []
+        for tweet in tweets:
+            for word in tweet.text.split(" "):
+                try:
+                    if word[0] == "#" and word not in hashtags:
+                        hashtags.append(word)
+                except IndexError:
+                    continue
+        return hashtags
+        
+    def bayes_classify(self, tweets):
+        """
+        Function that explores the use of a "naive bayes" classifier algorithm. Set up to 
+        be trained on the sampleTweets.txt file. This file contains a 1 or 0 (positive or negative) 
+        on each line, along with a tweet. Use the classifier to figure out a percentage of positive 
+        tweets.
+        """
+        with open('support_functions/text_files/sampleTweets.txt', 'r') as fh:
+            text = fh.readlines()
+        sents = []
+        for line in text:
+            lines = line.split('   ')
+            sents.append((lines[1], lines[0]))
+        random.shuffle(sents)
+        test_sents = sents[80:]
+        train_sents = sents[:80]
+        test_set = [(self.extract_features(t), s) for (t, s) in test_sents]
+        train_set = [(self.extract_features(t), s) for (t, s) in train_sents]
+        classifier = nltk.NaiveBayesClassifier.train(train_set)
+        print("NBC Accuracy: " + str(nltk.classify.accuracy(classifier, test_set)))
+        tweet_set = [self.extract_features(t) for t in tweets]
+        sentiments = classifier.classify_many(tweet_set)
+        positive = 0
+        for sent in sentiments:
+            if sent == '1':
+                positive += 1
+        try:
+            percent = (positive/float(len(sentiments)))*100
+        except ZeroDivisionError:
+            percent = 0
+        print("We estimate that %.2f percent of tweets are positive toward this issue." % percent)
